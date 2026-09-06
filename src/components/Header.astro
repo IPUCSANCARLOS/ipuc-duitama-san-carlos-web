@@ -1,57 +1,69 @@
-<header class="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur shadow-sm">
+<header class="fixed top-0 z-50 w-full bg-white/95 backdrop-blur shadow-sm">
 
-  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+  <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
 
-    <div class="flex items-center gap-3">
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-4">
 
-      <img 
+      <img
         src="/images/logo-san-carlos.png"
-        alt="IPUC Duitama San Carlos"
-        class="h-16 w-auto"
+        alt="Iglesia Pentecostal Unida de Colombia Obra Misionera Duitama San Carlos"
+        class="h-20 w-auto"
       />
 
-      <div>
-        <h1 class="font-bold text-blue-900">
-          IPUC San Carlos
-        </h1>
-
-        <p class="text-sm text-gray-600">
-          Duitama - Boyacá
-        </p>
-      </div>
-
-    </div>
+    </a>
 
 
-    <nav class="hidden md:flex gap-8 text-blue-900 font-semibold">
+    <!-- Menu escritorio -->
+    <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-blue-900">
 
-      <a href="/">Inicio</a>
+      <a href="/" class="hover:text-blue-500 transition">
+        Inicio
+      </a>
 
-      <a href="/historia">
+      <a href="#nosotros" class="hover:text-blue-500 transition">
+        Nosotros
+      </a>
+
+      <a href="#historia" class="hover:text-blue-500 transition">
         Historia
       </a>
 
-      <a href="/ministerios">
+      <a href="#ministerios" class="hover:text-blue-500 transition">
         Ministerios
       </a>
 
-      <a href="/radio">
+      <a href="#eventos" class="hover:text-blue-500 transition">
+        Eventos
+      </a>
+
+      <a href="#radio" class="hover:text-blue-500 transition">
         Radio
       </a>
 
-      <a href="/contacto">
+      <a href="#contacto" class="hover:text-blue-500 transition">
         Contacto
       </a>
 
     </nav>
 
 
+    <!-- Botón principal -->
     <a
-      href="/oracion"
-      class="hidden md:block bg-yellow-400 text-blue-950 px-6 py-3 rounded-full font-bold"
+      href="#oracion"
+      class="hidden lg:block rounded-full bg-yellow-400 px-6 py-3 font-bold text-blue-950 shadow hover:bg-yellow-300 transition"
     >
-      Petición de oración
+      Haz parte de nuestra iglesia
     </a>
+
+
+    <!-- Menu móvil -->
+    <button
+      class="lg:hidden text-3xl text-blue-900"
+      aria-label="Abrir menú"
+    >
+      ☰
+    </button>
 
 
   </div>
