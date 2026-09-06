@@ -1,168 +1,22 @@
 ---
+import Layout from "../layouts/Layout.astro";
+
 import "../styles/global.css";
+
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import RadioPlayer from "../components/RadioPlayer.astro";
+import Footer from "../components/Footer.astro";
 ---
 
-<html lang="es">
+<Layout>
 
-<head>
+<Header />
 
-<meta charset="UTF-8" />
+<Hero />
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<RadioPlayer />
 
-<title>
-IPUC Duitama San Carlos
-</title>
+<Footer />
 
-<meta
-name="description"
-content="Iglesia Pentecostal Unida de Colombia Obra Misionera Duitama San Carlos"
-/>
-
-</head>
-
-
-<body>
-
-
-<header>
-
-<div class="logo-area">
-
-<h1>
-IPUC Duitama San Carlos
-</h1>
-
-<p>
-Iglesia Pentecostal Unida de Colombia
-</p>
-
-</div>
-
-<nav>
-
-<a href="#">
-Inicio
-</a>
-
-<a href="#">
-Nosotros
-</a>
-
-<a href="#">
-Ministerios
-</a>
-
-<a href="#">
-Radio
-</a>
-
-<a href="#">
-Contacto
-</a>
-
-</nav>
-
-</header>
-
-
-
-<main>
-
-
-<section class="hero">
-
-
-<div class="hero-content">
-
-
-<p class="tag">
-
-OBRA MISIONERA NACIONAL
-
-</p>
-
-
-<h2>
-
-Una iglesia que vive la fe,
-sirve con amor y anuncia
-el evangelio.
-
-</h2>
-
-
-<p>
-
-Alcanzar a todos los que podamos;
-ganar a todos los que alcancemos;
-formar a todos los que ganemos
-y usar a todos los que formemos.
-
-</p>
-
-
-<button>
-
-Conócenos
-
-</button>
-
-
-</div>
-
-
-</section>
-
-
-
-<section class="welcome">
-
-
-<h2>
-
-Bienvenido a nuestra iglesia
-
-</h2>
-
-
-<p>
-
-Nuestro propósito es glorificar a Dios en todo lo que hacemos
-y compartir el mensaje transformador del evangelio con nuestra comunidad
-y el mundo.
-
-</p>
-
-
-</section>
-
-
-</main>
-
-
-
-<footer>
-
-<h3>
-En Sintonía con Jesús
-</h3>
-
-
-<p>
-Radio con identidad
-</p>
-
-
-<p>
-Sonando al Corazón de Dios
-</p>
-
-
-</footer>
-
-
-
-</body>
-
-</html>
+</Layout>
