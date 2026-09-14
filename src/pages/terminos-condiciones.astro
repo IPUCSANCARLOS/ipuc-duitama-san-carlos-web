@@ -1,0 +1,439 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const title =
+" Términos y Condiciones | IPUC Duitama San Carlos";
+
+const description =
+"Términos y condiciones de uso del sitio web de la Obra Misionera Duitama San Carlos de la Iglesia Pentecostal Unida de Colombia.";
+---
+
+<Layout
+title={title}
+description={description}
+showForm={false}
+>
+
+
+
+<!-- HERO -->
+
+<section
+class="
+relative
+overflow-hidden
+bg-gradient-to-br
+from-[#001B4D]
+via-[#00338D]
+to-[#001B4D]
+text-white
+"
+>
+
+
+<div
+class="
+absolute
+top-0
+right-0
+w-96
+h-96
+bg-[#F0AB00]/20
+rounded-full
+blur-3xl
+"
+></div>
+
+
+
+<div
+class="
+absolute
+bottom-0
+left-0
+w-96
+h-96
+bg-[#009FDA]/20
+rounded-full
+blur-3xl
+"
+></div>
+
+
+
+<div
+class="
+relative
+z-10
+max-w-6xl
+mx-auto
+px-6
+py-24
+text-center
+"
+data-animate
+>
+
+
+<div
+class="
+mx-auto
+w-20
+h-20
+rounded-full
+bg-[#F0AB00]/20
+flex
+items-center
+justify-center
+mb-8
+"
+>
+
+
+<svg
+xmlns="http://www.w3.org/2000/svg"
+class="w-10 h-10 text-[#F0AB00]"
+fill="none"
+viewBox="0 0 24 24"
+stroke="currentColor"
+>
+
+<path
+stroke-linecap="round"
+stroke-linejoin="round"
+stroke-width="2"
+d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v11a2 2 0 01-2 2z"
+/>
+
+</svg>
+
+
+</div>
+
+
+
+
+<h1
+class="
+text-4xl
+md:text-6xl
+font-extrabold
+"
+>
+
+Términos y Condiciones
+
+</h1>
+
+
+
+<p
+class="
+mt-6
+text-xl
+text-blue-100
+max-w-3xl
+mx-auto
+"
+>
+
+Condiciones generales para el uso responsable
+del sitio web de nuestra congregación.
+
+</p>
+
+
+
+<div
+class="
+mt-8
+inline-flex
+bg-white/10
+border
+border-white/20
+rounded-full
+px-6
+py-3
+"
+>
+
+Última actualización: septiembre de 2026
+
+</div>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+<main
+class="
+max-w-5xl
+mx-auto
+px-6
+py-20
+"
+>
+
+
+
+<div
+class="
+space-y-8
+"
+>
+
+
+
+
+
+{
+[
+[
+"1. Aceptación de los términos",
+
+`
+Al ingresar y utilizar este sitio web aceptas estos términos y condiciones.
+Si no estás de acuerdo con alguno de ellos, te recomendamos no utilizar
+nuestros servicios digitales.
+`
+],
+
+[
+"2. Propósito del sitio web",
+
+`
+Este sitio tiene como finalidad brindar información institucional sobre
+la Obra Misionera Duitama San Carlos de la Iglesia Pentecostal Unida de Colombia,
+incluyendo actividades, eventos, reuniones, ministerios y canales de contacto.
+`
+],
+
+[
+"3. Uso permitido del sitio",
+
+`
+El visitante se compromete a utilizar este sitio de manera responsable,
+respetando la legislación vigente y evitando acciones que puedan afectar
+su funcionamiento o seguridad.
+`
+],
+
+[
+"4. Contenido publicado",
+
+`
+Los textos, imágenes, logotipos, diseños, fotografías y demás contenidos
+publicados en este sitio pertenecen a la Obra Misionera Duitama San Carlos
+o cuentan con autorización para su uso.
+
+No está permitido copiar, modificar o distribuir contenido sin autorización previa.
+`
+],
+
+[
+"5. Información espiritual e institucional",
+
+`
+Los contenidos publicados tienen fines informativos, espirituales y comunitarios.
+La información sobre actividades, horarios o eventos puede estar sujeta a cambios.
+`
+],
+
+[
+"6. Enlaces externos",
+
+`
+Este sitio puede incluir enlaces hacia páginas externas como sitios oficiales,
+redes sociales o plataformas de terceros.
+
+No somos responsables por el contenido, disponibilidad o políticas de privacidad
+de dichos sitios externos.
+`
+],
+
+[
+"7. Contacto mediante WhatsApp",
+
+`
+Los canales de contacto disponibles permiten comunicarse voluntariamente con
+la iglesia.
+
+El usuario es responsable de la información que decide compartir mediante
+estos medios.
+`
+],
+
+[
+"8. Disponibilidad del servicio",
+
+`
+Trabajamos para mantener el sitio disponible y actualizado.
+
+Sin embargo, pueden presentarse interrupciones por mantenimiento,
+actualizaciones técnicas o situaciones fuera de nuestro control.
+`
+],
+
+[
+"9. Seguridad",
+
+`
+Aplicamos buenas prácticas para proteger nuestro sitio web.
+
+Los visitantes deben evitar actividades que puedan comprometer la seguridad,
+integridad o funcionamiento del servicio.
+`
+],
+
+[
+"10. Cambios en estos términos",
+
+`
+La Obra Misionera Duitama San Carlos podrá modificar estos términos cuando
+sea necesario para reflejar cambios legales, tecnológicos o administrativos.
+
+La fecha de actualización será modificada cuando existan cambios importantes.
+`
+]
+
+].map(item => (
+
+<section
+class="
+bg-white
+rounded-3xl
+border
+border-gray-100
+shadow-lg
+p-8
+hover:-translate-y-1
+transition-all
+duration-300
+"
+data-animate
+>
+
+
+<h2
+class="
+text-2xl
+font-bold
+text-[#00338D]
+mb-4
+"
+>
+{item[0]}
+</h2>
+
+
+<p
+class="
+text-gray-600
+leading-relaxed
+"
+>
+{item[1]}
+</p>
+
+
+</section>
+
+))
+}
+
+
+
+
+<section
+class="
+bg-gradient-to-r
+from-[#F0AB00]
+to-yellow-400
+rounded-3xl
+p-8
+text-[#00338D]
+shadow-xl
+"
+data-animate
+>
+
+
+<h2
+class="
+text-2xl
+font-bold
+"
+>
+Responsable del sitio
+</h2>
+
+
+<p
+class="
+mt-4
+leading-relaxed
+"
+>
+
+<strong>
+Obra Misionera Duitama San Carlos
+</strong>
+
+<br/>
+
+Iglesia Pentecostal Unida de Colombia
+
+<br/>
+
+Duitama, Boyacá - Colombia
+
+</p>
+
+
+
+<a
+href="mailto:ipucsancarlosduitama@gmail.com"
+class="
+inline-flex
+mt-6
+bg-[#00338D]
+text-white
+px-6
+py-3
+rounded-full
+font-bold
+hover:bg-[#001B4D]
+transition
+"
+>
+
+✉️
+ipucsancarlosduitama@gmail.com
+
+</a>
+
+
+
+</section>
+
+
+
+
+
+</div>
+
+
+</main>
+
+
+
+</Layout>

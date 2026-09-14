@@ -1,28 +1,228 @@
 ---
+import "../styles/global.css";
+
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+import ChurchForm from "../components/ChurchForm.astro";
+
+
 const {
-title = "IPUC Duitama San Carlos",
-description = "Iglesia Pentecostal Unida de Colombia Obra Misionera Duitama San Carlos"
+title = "IPUC Duitama San Carlos | Iglesia Pentecostal Unida de Colombia",
+description = "Conoce la Obra Misionera IPUC Duitama San Carlos. Una iglesia que vive la fe, sirve con amor y anuncia el evangelio."
 } = Astro.props;
+
 ---
 
 <!doctype html>
+
 <html lang="es">
+
+
 <head>
+
 
 <meta charset="UTF-8" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>{title}</title>
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+/>
 
-<meta name="description" content={description} />
+
+
+<!-- SEO PRINCIPAL -->
+
+<title>
+{title}
+</title>
+
+
+
+<meta
+name="description"
+content={description}
+/>
+
+
+
+<meta
+name="author"
+content="IPUC Obra Misionera Duitama San Carlos"
+/>
+
+
+
+<meta
+name="robots"
+content="index, follow"
+/>
+
+
+
+
+
+<!-- COLOR NAVEGADOR MÓVIL -->
+
+<meta
+name="theme-color"
+content="#00338D"
+/>
+
+
+
+
+
+<!-- FAVICON IPUC -->
+
+<link
+rel="icon"
+type="image/png"
+href="/favicon.png"
+/>
+
+
+
+<link
+rel="apple-touch-icon"
+href="/favicon.png"
+/>
+
+
+
+
+
+
+
+<!-- OPEN GRAPH PARA REDES SOCIALES -->
+
+
+<meta
+property="og:title"
+content={title}
+/>
+
+
+
+<meta
+property="og:description"
+content={description}
+/>
+
+
+
+<meta
+property="og:type"
+content="website"
+/>
+
+
+
+<meta
+property="og:locale"
+content="es_CO"
+/>
+
+
+
+<meta
+property="og:image"
+content="/images/logo-san-carlos.png"
+/>
+
+
+
+
+
+<!-- TWITTER / X CARD -->
+
+
+<meta
+name="twitter:card"
+content="summary_large_image"
+/>
+
+
+
+<meta
+name="twitter:title"
+content={title}
+/>
+
+
+
+<meta
+name="twitter:description"
+content={description}
+/>
+
+
+
+<meta
+name="twitter:image"
+content="/images/logo-san-carlos.png"
+/>
+
+
+
+
+
+
+
+<!-- MEJOR RENDIMIENTO -->
+
+<link
+rel="preconnect"
+href="https://fonts.googleapis.com"
+/>
+
+
+<link
+rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin
+/>
+
+
+
+
 
 </head>
 
+
+
+
+
 <body>
+
+
+<Header />
+
+
+<main>
 
 <slot />
 
+</main>
+
+
+
+<ChurchForm />
+
+
+<Footer />
+
+
+
+<script>
+import "../scripts/animations.js";
+</script>
+
+
+
 </body>
+
+
 
 </html>

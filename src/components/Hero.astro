@@ -1,63 +1,449 @@
-<section 
+<section
+id="inicio"
 class="
+relative
 min-h-screen
+min-h-[720px]
 flex
 items-center
+justify-center
+overflow-hidden
+py-24
+"
+>
+
+<!-- ==================================
+     IMAGEN HERO
+================================== -->
+
+<div
+class="
+absolute
+inset-0
+overflow-hidden
+"
+>
+
+<img
+src="/images/hero/hero-bg.jpg"
+alt="Obra Misionera IPUC Duitama San Carlos"
+fetchpriority="high"
+decoding="async"
+loading="eager"
+class="
+absolute
+inset-0
+w-full
+h-full
+object-cover
+hero-image
+"
+/>
+
+</div>
+
+
+<!-- ==================================
+     CAPA INSTITUCIONAL
+================================== -->
+
+
+<div
+class="
+absolute
+inset-0
 bg-gradient-to-br
-from-blue-950
-via-blue-700
-to-cyan-500
+from-[#001B4D]/90
+via-[#00338D]/70
+to-[#009FDA]/50
+"
+></div>
+
+
+
+<div
+class="
+absolute
+inset-0
+bg-black/10
+"
+></div>
+
+
+
+<!-- ==================================
+     CONTENIDO
+================================== -->
+
+
+<div
+class="
+relative
+z-10
+w-full
+max-w-6xl
+mx-auto
+px-6
+py-10
+lg:py-14
+text-center
 text-white
-pt-24
-">
+"
+>
 
-<div class="max-w-7xl mx-auto px-6">
 
-<p class="uppercase tracking-[5px] text-yellow-300 font-bold">
-OBRA MISIONERA NACIONAL
+<p
+data-animate
+class="
+uppercase
+tracking-[8px]
+text-[#F0AB00]
+font-bold
+text-xs
+sm:text-sm
+mb-6
+"
+>
+
+Obra Misionera Nacional
+
 </p>
 
 
-<h2 class="text-5xl md:text-7xl font-bold max-w-4xl mt-6">
 
-Iglesia Pentecostal Unida de Colombia
+<h1
+data-animate
+data-delay="1"
+class="
+font-extrabold
+leading-tight
+text-4xl
+sm:text-5xl
+md:text-6xl
+lg:text-7xl
+drop-shadow-2xl
+"
+>
 
-<br/>
+Iglesia Pentecostal
+<br class="hidden md:block">
+
+Unida de Colombia
+
+</h1>
+
+
+
+
+<h2
+data-animate
+data-delay="2"
+class="
+mt-6
+text-2xl
+sm:text-3xl
+md:text-4xl
+font-semibold
+text-[#F0AB00]
+"
+>
 
 Obra Misionera Duitama San Carlos
 
 </h2>
 
 
-<p class="mt-8 text-xl max-w-2xl text-blue-100">
+
+
+<div
+data-animate
+data-delay="3"
+class="
+w-24
+h-1
+bg-[#F0AB00]
+rounded-full
+mx-auto
+my-8
+"
+></div>
+
+
+
+<p
+data-animate
+data-delay="4"
+class="
+max-w-4xl
+mx-auto
+text-base
+sm:text-lg
+md:text-xl
+leading-relaxed
+text-white
+"
+>
 
 Una iglesia que vive la fe,
-sirve con amor y anuncia
-el mensaje transformador del evangelio.
+sirve con amor y anuncia el mensaje
+transformador del evangelio.
 
 </p>
 
 
-<div class="mt-10 flex gap-5">
+
+<div
+data-animate
+data-delay="5"
+class="
+mt-8
+flex
+flex-col
+sm:flex-row
+justify-center
+items-center
+gap-5
+"
+>
+
 
 <a
-href="/historia"
-class="bg-yellow-400 text-blue-950 px-8 py-4 rounded-full font-bold"
+href="#nosotros"
+class="
+inline-flex
+items-center
+justify-center
+rounded-full
+bg-[#F0AB00]
+text-[#00338D]
+px-10
+py-4
+font-bold
+shadow-xl
+transition-all
+duration-300
+hover:-translate-y-1
+hover:bg-yellow-300
+"
 >
+
 Conócenos
+
 </a>
+
 
 
 <a
-href="/radio"
-class="border border-white px-8 py-4 rounded-full"
+href="#radio"
+class="
+inline-flex
+items-center
+justify-center
+rounded-full
+border
+border-white/40
+bg-white/10
+backdrop-blur-md
+px-10
+py-4
+font-bold
+text-white
+shadow-xl
+transition-all
+duration-300
+hover:-translate-y-1
+hover:bg-white
+hover:text-[#00338D]
+"
 >
-Escuchar radio
+
+🎧 Escuchar radio online
+
 </a>
 
+
 </div>
 
 
 </div>
+
+<!-- ==================================
+     INDICADOR SCROLL
+================================== -->
+
+
+<div
+
+class="
+absolute
+bottom-14
+left-1/2
+-translate-x-1/2
+hidden
+md:flex
+flex-col
+items-center
+text-white/70
+z-20
+"
+
+>
+
+
+<span
+
+class="
+text-xs
+mb-3
+uppercase
+tracking-[4px]
+font-semibold
+"
+
+>
+
+Desliza
+
+</span>
+
+
+
+<div
+
+class="
+w-6
+h-10
+rounded-full
+border
+border-white/50
+flex
+justify-center
+pt-2
+"
+
+>
+
+
+<span
+
+class="
+w-1.5
+h-1.5
+bg-white
+rounded-full
+animate-bounce
+"
+
+></span>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
 
 </section>
+
+
+
+
+
+
+
+<style>
+
+
+/* ==================================
+   ZOOM CINEMÁTICO HERO
+================================== */
+
+
+.hero-image{
+
+
+transform:scale(1.08);
+
+
+animation:
+
+heroZoom
+
+30s
+
+ease-in-out
+
+infinite
+
+alternate;
+
+
+}
+
+
+
+
+@keyframes heroZoom {
+
+
+from {
+
+
+transform:
+
+scale(1.08);
+
+
+}
+
+
+to {
+
+
+transform:
+
+scale(1.15);
+
+
+}
+
+
+}
+
+
+
+
+
+
+/* ==================================
+   REDUCCIÓN DE MOVIMIENTO
+================================== */
+
+
+@media(
+prefers-reduced-motion:reduce
+){
+
+
+.hero-image{
+
+
+animation:none;
+
+transform:scale(1.08);
+
+
+}
+
+
+
+}
+
+
+
+</style>

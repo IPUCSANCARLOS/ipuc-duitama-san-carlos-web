@@ -1,0 +1,162 @@
+---
+const {
+color = "blue",
+position = "bottom"
+} = Astro.props;
+
+
+const colors = {
+
+blue:
+"fill-[#00338D]/10",
+
+gold:
+"fill-[#F0AB00]/10",
+
+light:
+"fill-gray-200/40"
+
+};
+
+
+const waveColor =
+colors[color] || colors.blue;
+
+---
+<div
+
+class={`
+relative
+w-full
+overflow-hidden
+leading-[0]
+${position === "top" ? "rotate-180" : ""}
+`}
+
+>
+
+
+<svg
+
+class="
+wave-animation
+relative
+block
+w-[120%]
+h-[90px]
+md:h-[120px]
+"
+
+viewBox="
+0 0 1440 120
+"
+
+preserveAspectRatio="none"
+
+xmlns="http://www.w3.org/2000/svg"
+
+>
+
+
+<path
+
+class={waveColor}
+
+d="
+M0,64
+C240,120 480,0 720,40
+C960,80 1200,120 1440,48
+V120
+H0
+Z
+"
+
+/>
+
+
+
+<path
+
+class="
+fill-white/60
+"
+
+d="
+M0,80
+C240,20 480,120 720,70
+C960,20 1200,80 1440,40
+V120
+H0
+Z
+"
+
+/>
+
+
+
+</svg>
+
+
+</div>
+
+
+
+
+
+
+<style>
+
+
+.wave-animation{
+
+
+animation:
+moveWave 14s ease-in-out infinite alternate;
+
+
+}
+
+
+
+
+
+@keyframes moveWave{
+
+
+from{
+
+transform:
+translateX(0);
+
+}
+
+
+to{
+
+transform:
+translateX(-40px);
+
+}
+
+
+}
+
+
+
+
+@media(max-width:640px){
+
+
+.wave-animation{
+
+height:70px;
+
+}
+
+
+
+}
+
+
+
+</style>

@@ -1,71 +1,744 @@
-<header class="fixed top-0 z-50 w-full bg-white/95 backdrop-blur shadow-sm">
-
-  <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-
-    <!-- Logo -->
-    <a href="/" class="flex items-center gap-4">
-
-      <img
-        src="/images/logo-san-carlos.png"
-        alt="Iglesia Pentecostal Unida de Colombia Obra Misionera Duitama San Carlos"
-        class="h-20 w-auto"
-      />
-
-    </a>
-
-
-    <!-- Menu escritorio -->
-    <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-blue-900">
-
-      <a href="/" class="hover:text-blue-500 transition">
-        Inicio
-      </a>
-
-      <a href="#nosotros" class="hover:text-blue-500 transition">
-        Nosotros
-      </a>
-
-      <a href="#historia" class="hover:text-blue-500 transition">
-        Historia
-      </a>
-
-      <a href="#ministerios" class="hover:text-blue-500 transition">
-        Ministerios
-      </a>
-
-      <a href="#eventos" class="hover:text-blue-500 transition">
-        Eventos
-      </a>
-
-      <a href="#radio" class="hover:text-blue-500 transition">
-        Radio
-      </a>
-
-      <a href="#contacto" class="hover:text-blue-500 transition">
-        Contacto
-      </a>
-
-    </nav>
+<header
+id="main-header"
+class="
+fixed
+top-0
+z-50
+w-full
+bg-white/80
+backdrop-blur-xl
+transition-all
+duration-500
+"
+>
 
 
-    <!-- Botón principal -->
-    <a
-      href="#oracion"
-      class="hidden lg:block rounded-full bg-yellow-400 px-6 py-3 font-bold text-blue-950 shadow hover:bg-yellow-300 transition"
-    >
-      Haz parte de nuestra iglesia
-    </a>
+<div
+class="
+max-w-7xl
+mx-auto
+flex
+items-center
+justify-between
+px-5
+py-3
+lg:px-8
+min-h-[84px]
+"
+>
 
 
-    <!-- Menu móvil -->
-    <button
-      class="lg:hidden text-3xl text-blue-900"
-      aria-label="Abrir menú"
-    >
-      ☰
-    </button>
+<!-- LOGO -->
+
+<a
+href="/"
+class="flex items-center"
+aria-label="Inicio IPUC Duitama San Carlos"
+>
+
+<img
+
+src="/images/logo-san-carlos.png"
+
+alt="IPUC Duitama San Carlos"
+
+loading="eager"
+
+decoding="async"
+
+class="
+h-12
+sm:h-14
+lg:h-16
+w-auto
+transition
+duration-300
+hover:scale-105
+"
+
+/>
+
+</a>
 
 
-  </div>
+
+
+
+<!-- MENU DESKTOP -->
+
+
+<nav
+
+aria-label="Navegación principal"
+
+class="
+hidden
+lg:flex
+items-center
+gap-8
+text-sm
+font-semibold
+text-[#00338D]
+"
+
+>
+
+
+<a href="/"
+class="menu-link">
+
+Inicio
+
+</a>
+
+
+<a href="/#nosotros"
+class="menu-link">
+
+Nosotros
+
+</a>
+
+
+<a href="/#historia"
+class="menu-link">
+
+Historia
+
+</a>
+
+
+<a href="/#junta"
+class="menu-link">
+
+Junta Local
+
+</a>
+
+
+<a href="/#ministerios"
+class="menu-link">
+
+Ministerios
+
+</a>
+
+
+<a href="/#eventos"
+class="menu-link">
+
+Eventos
+
+</a>
+
+
+<a href="/#radio"
+class="menu-link">
+
+Radio
+
+</a>
+
+
+<a href="/kids"
+class="menu-link">
+
+IPUC Kids
+
+</a>
+
+
+</nav>
+
+
+
+
+
+
+<!-- BOTÓN PRINCIPAL -->
+
+
+<button
+
+id="open-form-desktop"
+
+type="button"
+
+aria-label="Solicitar información de la iglesia"
+
+class="
+hidden
+lg:flex
+items-center
+rounded-full
+bg-[#F0AB00]
+px-7
+py-3
+font-bold
+text-[#00338D]
+shadow-lg
+transition-all
+duration-300
+hover:-translate-y-1
+hover:shadow-xl
+cursor-pointer
+"
+
+>
+
+Quiero conocer la iglesia
+
+</button>
+
+
+
+
+
+
+
+
+
+<!-- BOTÓN MENU MÓVIL -->
+
+
+<button
+
+id="mobile-menu-button"
+
+type="button"
+
+aria-label="Abrir menú"
+
+aria-expanded="false"
+
+aria-controls="mobile-menu"
+
+class="
+lg:hidden
+flex
+items-center
+justify-center
+text-3xl
+text-[#00338D]
+w-10
+h-10
+"
+
+>
+
+<span id="menu-icon">
+
+☰
+
+</span>
+
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- MENU MOVIL -->
+
+
+<div
+
+id="mobile-menu"
+
+class="
+hidden
+lg:hidden
+bg-white
+shadow-xl
+border-t
+border-gray-100
+"
+
+>
+
+
+<nav
+
+aria-label="Navegación móvil"
+
+class="
+flex
+flex-col
+px-6
+py-8
+gap-6
+font-semibold
+text-[#00338D]
+"
+
+>
+
+
+<a href="/" class="mobile-link">
+
+Inicio
+
+</a>
+
+
+<a href="/#nosotros" class="mobile-link">
+
+Nosotros
+
+</a>
+
+
+<a href="/#historia" class="mobile-link">
+
+Historia
+
+</a>
+
+
+<a href="/#junta" class="mobile-link">
+
+Junta Local
+
+</a>
+
+
+<a href="/#ministerios" class="mobile-link">
+
+Ministerios
+
+</a>
+
+
+<a href="/#eventos" class="mobile-link">
+
+Eventos
+
+</a>
+
+
+<a href="/#radio" class="mobile-link">
+
+Radio
+
+</a>
+
+
+<a href="/kids" class="mobile-link">
+
+IPUC Kids
+
+</a>
+
+
+
+
+<button
+
+id="open-form-mobile"
+
+type="button"
+
+aria-label="Solicitar información de la iglesia"
+
+class="
+bg-[#F0AB00]
+rounded-full
+py-3
+text-[#00338D]
+font-bold
+shadow-lg
+"
+
+>
+
+Quiero conocer la iglesia
+
+</button>
+
+
+
+</nav>
+
+
+</div>
+
 
 </header>
+
+
+
+
+
+
+
+<style>
+
+
+/* ============================
+   ENLACES MENU
+============================ */
+
+
+.menu-link,
+.mobile-link{
+
+
+position:relative;
+
+transition:
+color .3s ease;
+
+
+}
+
+
+
+.menu-link:hover,
+.mobile-link:hover{
+
+
+color:#F0AB00;
+
+
+}
+
+
+
+
+
+.menu-link::after{
+
+
+content:"";
+
+position:absolute;
+
+left:0;
+
+bottom:-8px;
+
+width:0;
+
+height:3px;
+
+background:#F0AB00;
+
+border-radius:20px;
+
+transition:
+width .3s ease;
+
+
+}
+
+
+
+
+
+.menu-link:hover::after{
+
+
+width:100%;
+
+
+}
+
+
+
+
+
+/* ============================
+   HEADER SCROLL
+============================ */
+
+
+#main-header{
+
+
+transition:
+
+background .4s ease,
+
+box-shadow .4s ease,
+
+padding .4s ease;
+
+
+}
+
+
+
+#main-header.scrolled{
+
+background:
+
+rgba(255,255,255,.96);
+
+backdrop-filter:
+
+blur(18px);
+
+box-shadow:
+
+0 12px 35px rgba(0,51,141,.15);
+
+}
+
+
+
+
+
+
+/* ============================
+   REDUCCION DE MOVIMIENTO
+============================ */
+
+
+@media(
+prefers-reduced-motion: reduce
+){
+
+
+#main-header,
+.menu-link,
+.mobile-link,
+img{
+
+transition:none !important;
+
+}
+
+
+}
+
+
+
+</style>
+
+
+
+
+
+
+
+<script>
+
+
+const header =
+document.querySelector("#main-header");
+
+
+
+window.addEventListener(
+"scroll",
+()=>{
+
+
+if(
+window.scrollY > 40
+){
+
+header?.classList.add(
+"scrolled"
+);
+
+
+}else{
+
+
+header?.classList.remove(
+"scrolled"
+);
+
+
+}
+
+
+});
+
+
+
+
+
+
+
+const menuButton =
+document.querySelector("#mobile-menu-button");
+
+
+const mobileMenu =
+document.querySelector("#mobile-menu");
+
+
+const menuIcon =
+document.querySelector("#menu-icon");
+
+
+
+
+
+function closeMenu(){
+
+
+mobileMenu?.classList.add(
+"hidden"
+);
+
+
+document.body.classList.remove(
+"overflow-hidden"
+);
+
+
+menuIcon.textContent="☰";
+
+
+menuButton?.setAttribute(
+"aria-expanded",
+"false"
+);
+
+
+}
+
+
+
+
+
+
+
+function toggleMenu(){
+
+
+const opened =
+!mobileMenu?.classList.contains(
+"hidden"
+);
+
+
+
+mobileMenu?.classList.toggle(
+"hidden"
+);
+
+
+
+document.body.classList.toggle(
+"overflow-hidden",
+!opened
+);
+
+
+
+menuButton?.setAttribute(
+"aria-expanded",
+String(!opened)
+);
+
+
+
+
+menuIcon.textContent =
+!opened
+?
+"✕"
+:
+"☰";
+
+
+}
+
+
+
+
+
+
+menuButton?.addEventListener(
+"click",
+toggleMenu
+);
+
+
+
+
+
+
+
+
+document
+.querySelectorAll(".mobile-link")
+.forEach(
+(link)=>{
+
+
+link.addEventListener(
+"click",
+closeMenu
+);
+
+
+});
+
+
+
+
+
+
+
+
+function openChurchForm(){
+
+
+window.dispatchEvent(
+new Event(
+"open-church-form"
+)
+);
+
+
+}
+
+
+
+
+
+
+document
+.querySelector("#open-form-desktop")
+?.addEventListener(
+"click",
+openChurchForm
+);
+
+
+
+
+
+
+
+document
+.querySelector("#open-form-mobile")
+?.addEventListener(
+"click",
+()=>{
+
+
+openChurchForm();
+
+closeMenu();
+
+
+});
+
+
+
+</script>

@@ -1,22 +1,79 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
-import "../styles/global.css";
 
-import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
+
+import About from "../components/About.astro";
+
+import History from "../components/History.astro";
+
+import JuntaLocal from "../components/JuntaLocal.astro";
+
+import Ministerios from "../components/Ministerios.astro";
+
+import Eventos from "../components/Eventos.astro";
+
 import RadioPlayer from "../components/RadioPlayer.astro";
-import Footer from "../components/Footer.astro";
+
 ---
 
-<Layout>
 
-<Header />
+<Layout
+title="IPUC Duitama San Carlos | Iglesia Pentecostal Unida de Colombia"
+description="Conoce la Obra Misionera IPUC Duitama San Carlos. Eventos, ministerios, radio online, historia y actividades congregacionales."
+>
+
+
+<main>
+
+
+<!-- HERO PRINCIPAL -->
+
+<section id="inicio">
 
 <Hero />
 
+</section>
+
+
+
+<!-- INFORMACIÓN DE LA IGLESIA -->
+
+<About />
+
+
+
+<!-- HISTORIA INSTITUCIONAL -->
+
+<History />
+
+
+
+<!-- LIDERAZGO -->
+
+<JuntaLocal />
+
+
+
+<!-- MINISTERIOS -->
+
+<Ministerios />
+
+
+
+<!-- EVENTOS DESDE BLOGGER -->
+
+<Eventos />
+
+
+
+<!-- RADIO ONLINE -->
+
 <RadioPlayer />
 
-<Footer />
+
+</main>
+
 
 </Layout>

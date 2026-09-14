@@ -1,0 +1,2676 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+---
+
+<Layout
+    title="¿Dónde está este versículo? | IPUC Kids"
+    description="Juego bíblico infantil de IPUC Kids para aprender la Palabra de Dios jugando."
+>
+
+
+<section id="kids-versiculo"
+class="
+relative
+overflow-hidden
+bg-gradient-to-br
+from-[#009FDA]
+via-[#00338D]
+to-[#001B4D]
+min-h-screen
+pt-[110px]
+pb-10
+px-4
+">
+
+<!-- DECORACIONES -->
+
+<div
+class="
+absolute
+top-20
+left-10
+w-40
+h-40
+bg-white/20
+rounded-full
+blur-3xl
+">
+</div>
+
+
+<div
+class="
+absolute
+bottom-20
+right-10
+w-56
+h-56
+bg-[#F0AB00]/30
+rounded-full
+blur-3xl
+">
+</div>
+
+
+
+<div
+class="
+absolute
+top-32
+right-20
+text-6xl
+opacity-30
+animate-pulse
+">
+⭐
+</div>
+
+
+
+<div
+class="
+absolute
+bottom-32
+left-20
+text-5xl
+opacity-30
+">
+☁️
+</div>
+
+
+
+<!-- CONTENEDOR -->
+
+<div
+class="
+relative
+z-10
+max-w-5xl
+mx-auto
+"
+>
+
+
+
+<!-- TITULO -->
+
+<div
+class="
+text-center
+mb-8
+lg:mb-6
+">
+
+
+<div
+class="
+inline-flex
+items-center
+justify-center
+w-20
+h-20
+sm:w-24
+sm:h-24
+rounded-full
+bg-white
+shadow-2xl
+text-4xl
+sm:text-5xl
+mb-4
+sm:mb-6
+">
+
+📖
+
+</div>
+
+
+
+<h1
+class="
+text-3xl
+sm:text-4xl
+lg:text-5xl
+font-extrabold
+text-white
+drop-shadow-lg
+leading-tight
+">
+
+¿Dónde está este versículo?
+
+</h1>
+
+
+
+<p
+class="
+mt-3
+text-base
+sm:text-lg
+lg:text-xl
+text-white/90
+max-w-3xl
+mx-auto
+">
+
+Encuentra la cita bíblica correcta y aprende jugando la Palabra de Dios.
+
+</p>
+
+
+</div>
+
+
+
+
+
+<!-- TARJETA PRINCIPAL -->
+
+<div
+class="
+bg-white/95
+backdrop-blur-xl
+rounded-3xl
+shadow-2xl
+p-4
+sm:p-6
+lg:p-8
+border
+border-white/40
+"
+>
+
+
+
+<!-- PANTALLA INICIO -->
+
+<div
+id="pantalla-inicio"
+class="
+text-center
+py-8
+flex
+flex-col
+justify-center
+"
+>
+
+
+<h2
+class="
+text-3xl
+font-bold
+text-[#00338D]
+mb-5
+">
+
+¡Prepárate para jugar! 🎮
+
+</h2>
+
+
+
+<p
+class="
+text-gray-600
+text-lg
+leading-relaxed
+max-w-2xl
+mx-auto
+">
+
+Lee cada versículo, piensa dónde aparece en la Biblia
+y selecciona la respuesta correcta.
+
+</p>
+
+
+
+
+<div
+class="
+grid
+grid-cols-1
+sm:grid-cols-3
+gap-5
+mt-10
+">
+
+
+<div class="kids-info-card">
+
+⭐
+
+<p>
+Gana puntos
+</p>
+
+</div>
+
+
+
+<div class="kids-info-card">
+
+🏆
+
+<p>
+Supera niveles
+</p>
+
+</div>
+
+
+
+<div class="kids-info-card">
+
+📚
+
+<p>
+Aprende la Biblia
+</p>
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+<button
+id="btn-comenzar"
+type="button"
+class="
+mt-10
+inline-flex
+items-center
+justify-center
+bg-[#F0AB00]
+text-[#00338D]
+font-extrabold
+text-lg
+px-12
+py-4
+rounded-full
+shadow-xl
+transition-all
+duration-300
+hover:-translate-y-1
+hover:shadow-2xl
+"
+>
+
+🚀 Comenzar juego
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- AREA DEL JUEGO -->
+
+<div
+id="area-juego"
+class="
+hidden
+pt-4
+min-h-[680px]
+flex
+flex-col
+justify-center
+"
+>
+
+
+<!-- MARCADORES -->
+
+<div
+class="
+flex
+flex-col
+sm:flex-row
+justify-between
+items-center
+gap-3
+mb-6
+p-3
+sm:p-4
+rounded-2xl
+bg-[#F8FBFF]
+border
+border-[#DCE7F5]
+">
+
+
+<div
+class="
+bg-[#00338D]
+text-white
+rounded-full
+px-6
+py-3
+font-bold
+">
+
+Nivel:
+
+<span id="nivel">
+1
+</span>
+
+</div>
+
+
+
+<div
+class="
+bg-[#F0AB00]
+text-[#00338D]
+rounded-full
+px-6
+py-3
+font-bold
+">
+
+⭐ Puntos:
+
+<span id="puntos">
+0
+</span>
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+<!-- NUEVO PROGRESO -->
+
+<div class="mb-6">
+
+
+<div
+class="
+flex
+justify-between
+text-sm
+font-bold
+text-[#00338D]
+mb-2
+">
+
+<span>
+Progreso
+</span>
+
+
+<span id="texto-progreso">
+0%
+</span>
+
+
+</div>
+
+
+
+<div
+class="
+w-full
+h-3
+bg-gray-200
+rounded-full
+overflow-hidden
+">
+
+
+<div
+id="barra-progreso"
+class="
+h-full
+bg-[#009FDA]
+rounded-full
+transition-all
+duration-500
+"
+style="width:0%"
+>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div
+class="
+text-center
+mb-5
+">
+
+
+<p
+class="
+text-sm
+uppercase
+tracking-widest
+text-[#009FDA]
+font-bold
+">
+
+Pregunta
+
+</p>
+
+
+
+<h2
+id="numero-pregunta"
+class="
+text-2xl
+font-bold
+text-[#00338D]
+">
+
+1
+
+</h2>
+
+
+</div>
+
+
+
+
+
+<div
+id="pregunta"
+class="
+bg-blue-50
+rounded-2xl
+p-4
+sm:p-5
+lg:p-6
+text-center
+text-lg
+sm:text-xl
+font-semibold
+text-gray-700
+mb-6
+">
+
+Cargando pregunta...
+
+</div>
+
+
+
+<!-- REFERENCIA BIBLICA -->
+
+<div
+id="referencia-biblica"
+class="
+hidden
+text-center
+mb-5
+text-[#00338D]
+font-bold
+"
+>
+
+</div>
+
+
+
+
+<div
+id="opciones"
+class="
+grid
+grid-cols-1
+gap-4
+">
+
+</div>
+
+
+
+
+
+<!-- EXPLICACION -->
+
+<div
+id="explicacion-biblica"
+class="
+hidden
+mt-6
+bg-[#F8FBFF]
+border
+border-[#DCE7F5]
+rounded-2xl
+p-5
+text-gray-700
+"
+>
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- RESULTADO FINAL -->
+
+
+<div
+id="pantalla-final"
+class="
+hidden
+text-center
+">
+
+
+<div
+class="
+text-7xl
+mb-5
+">
+
+🏆
+
+</div>
+
+
+
+<h2
+class="
+text-3xl
+font-bold
+text-[#00338D]
+">
+
+¡Excelente trabajo!
+
+</h2>
+
+
+
+<p
+id="resultado-final"
+class="
+mt-5
+text-xl
+text-gray-600
+">
+
+</p>
+
+
+
+<button
+id="jugar-nuevo"
+type="button"
+class="
+mt-8
+bg-[#00338D]
+text-white
+font-bold
+px-10
+py-4
+rounded-full
+">
+
+🔄 Jugar nuevamente
+
+</button>
+
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+</Layout>
+
+<style is:global>
+
+
+/* =====================================================
+   IPUC KIDS - JUEGO BÍBLICO
+   SISTEMA VISUAL
+===================================================== */
+
+
+
+/* Tarjetas informativas inicio */
+
+
+.kids-info-card {
+
+
+    background:
+
+    linear-gradient(
+
+        145deg,
+
+        #ffffff,
+
+        #f4f9ff
+
+    );
+
+
+    border:
+
+    2px solid rgba(0,51,141,.08);
+
+
+    border-radius:
+
+    1.5rem;
+
+
+    padding:
+
+    1.5rem;
+
+
+    display:flex;
+
+
+    flex-direction:column;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    gap:.5rem;
+
+
+    font-size:2rem;
+
+
+    color:#00338D;
+
+
+    box-shadow:
+
+    0 10px 25px rgba(0,0,0,.08);
+
+
+    transition:
+
+    .35s ease;
+
+}
+
+
+
+.kids-info-card p {
+
+
+    margin:0;
+
+
+    font-size:1rem;
+
+
+    font-weight:700;
+
+
+    color:#334155;
+
+}
+
+
+
+.kids-info-card:hover {
+
+
+    transform:
+
+    translateY(-8px);
+
+
+    box-shadow:
+
+    0 18px 35px rgba(0,51,141,.18);
+
+}
+
+
+
+
+
+/* =====================================================
+   OPCIONES DE RESPUESTA
+===================================================== */
+
+
+.kids-option {
+
+
+    width:100%;
+
+
+    min-height:75px;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:1rem;
+
+
+    padding:1rem 1.25rem;
+
+
+    background:white;
+
+
+    border:
+
+    2px solid #dbe7f5;
+
+
+    border-radius:
+
+    1.25rem;
+
+
+    cursor:pointer;
+
+
+    transition:
+
+    all .3s ease;
+
+
+    font-weight:700;
+
+
+    color:#1f2937;
+
+
+    text-align:left;
+
+
+}
+
+
+
+.kids-option:hover {
+
+
+    border-color:
+
+    #009FDA;
+
+
+    transform:
+
+    translateY(-3px);
+
+
+    box-shadow:
+
+    0 10px 25px rgba(0,159,218,.15);
+
+}
+
+
+
+
+
+/* Letra de respuesta */
+
+
+.kids-option-letter {
+
+
+    width:42px;
+
+
+    height:42px;
+
+
+    flex-shrink:0;
+
+
+    border-radius:50%;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    background:#00338D;
+
+
+    color:white;
+
+
+    font-weight:800;
+
+
+}
+
+
+
+
+
+/* Estado seleccionado */
+
+
+.kids-option.selected {
+
+
+    border-color:
+
+    #009FDA;
+
+
+    background:
+
+    #effaff;
+
+}
+
+
+
+
+
+/* Respuesta correcta */
+
+
+.kids-option.correct {
+
+
+    background:
+
+    #dcfce7;
+
+
+    border-color:
+
+    #16a34a;
+
+
+    color:#166534;
+
+
+    animation:
+
+    correctAnswer .45s ease;
+
+}
+
+
+
+.kids-option.correct
+.kids-option-letter {
+
+
+    background:#16a34a;
+
+}
+
+
+
+
+/* Respuesta incorrecta */
+
+
+.kids-option.incorrect {
+
+
+    background:
+
+    #fee2e2;
+
+
+    border-color:
+
+    #dc2626;
+
+
+    color:#991b1b;
+
+
+    animation:
+
+    wrongAnswer .45s ease;
+
+}
+
+
+
+.kids-option.incorrect
+.kids-option-letter {
+
+
+    background:#dc2626;
+
+}
+
+
+
+
+
+/* =====================================================
+   ANIMACIONES RESPUESTAS
+===================================================== */
+
+
+@keyframes correctAnswer {
+
+
+    0%{
+
+        transform:scale(1);
+
+    }
+
+
+    50%{
+
+        transform:scale(1.03);
+
+    }
+
+
+    100%{
+
+        transform:scale(1);
+
+    }
+
+}
+
+
+
+@keyframes wrongAnswer {
+
+
+    0%,
+    100%{
+
+        transform:translateX(0);
+
+    }
+
+
+    25%{
+
+        transform:translateX(-8px);
+
+    }
+
+
+    75%{
+
+        transform:translateX(8px);
+
+    }
+
+}
+
+
+
+
+/* =====================================================
+   BARRA DE PROGRESO
+===================================================== */
+
+
+#barra-progreso {
+
+
+    position:relative;
+
+
+    overflow:hidden;
+
+}
+
+
+
+#barra-progreso::after {
+
+
+    content:"";
+
+
+    position:absolute;
+
+
+    inset:0;
+
+
+    background:
+
+    linear-gradient(
+
+        90deg,
+
+        transparent,
+
+        rgba(255,255,255,.45),
+
+        transparent
+
+    );
+
+
+    animation:
+
+    progressGlow 2s infinite;
+
+}
+
+
+
+@keyframes progressGlow {
+
+
+    from{
+
+        transform:translateX(-100%);
+
+    }
+
+
+    to{
+
+        transform:translateX(100%);
+
+    }
+
+}
+
+
+
+
+/* =====================================================
+   EXPLICACIÓN BÍBLICA
+===================================================== */
+
+
+#explicacion-biblica {
+
+
+    animation:
+
+    aparecer .5s ease;
+
+}
+
+
+
+#explicacion-biblica strong {
+
+
+    color:#00338D;
+
+}
+
+
+
+.explicacion-icon {
+
+
+    font-size:2rem;
+
+}
+
+
+
+
+
+/* =====================================================
+   REFERENCIA BÍBLICA
+===================================================== */
+
+
+#referencia-biblica {
+
+
+    animation:
+
+    aparecer .4s ease;
+
+}
+
+
+
+@keyframes aparecer {
+
+
+    from{
+
+
+        opacity:0;
+
+
+        transform:
+
+        translateY(15px);
+
+
+    }
+
+
+    to{
+
+
+        opacity:1;
+
+
+        transform:
+
+        translateY(0);
+
+
+    }
+
+}
+
+
+
+
+
+/* =====================================================
+   PANTALLA FINAL
+===================================================== */
+
+
+#pantalla-final {
+
+
+    animation:
+
+    aparecer .6s ease;
+
+}
+
+
+
+#pantalla-final .trofeo {
+
+
+    animation:
+
+    flotar 2s infinite ease-in-out;
+
+}
+
+
+
+@keyframes flotar {
+
+
+    0%,
+    100%{
+
+
+        transform:
+
+        translateY(0);
+
+
+    }
+
+
+    50%{
+
+
+        transform:
+
+        translateY(-12px);
+
+
+    }
+
+}
+
+
+
+
+
+/* =====================================================
+   EFECTOS MOBILE
+===================================================== */
+
+
+@media(max-width:640px){
+
+
+    .kids-option {
+
+
+        min-height:68px;
+
+
+        padding:.85rem;
+
+
+    }
+
+
+
+    .kids-option-letter {
+
+
+        width:36px;
+
+
+        height:36px;
+
+
+    }
+
+
+
+}
+
+/* =====================================================
+   IPUC KIDS
+   AJUSTES RESPONSIVE MULTIPANTALLA
+   NO MODIFICA DISEÑO ORIGINAL
+===================================================== */
+
+
+/* =====================================================
+   PANTALLAS GRANDES
+   PC FULL HD / 2K
+===================================================== */
+
+
+@media (min-width:1440px){
+
+
+    #kids-versiculo{
+
+        padding-top:120px;
+
+        padding-bottom:60px;
+
+    }
+
+
+    #kids-versiculo .max-w-5xl{
+
+        max-width:1100px;
+
+    }
+
+
+}
+
+
+
+
+
+/* =====================================================
+   LAPTOPS
+   1366x768 / 1440x900
+===================================================== */
+
+
+@media (min-width:1024px) and (max-width:1439px){
+
+#kids-versiculo{
+
+padding-top:110px;
+
+
+        padding-bottom:40px;
+
+
+    }
+
+
+
+    #kids-versiculo h1{
+
+
+        font-size:3rem;
+
+
+    }
+
+
+
+    #kids-versiculo .max-w-5xl{
+
+
+        max-width:950px;
+
+
+    }
+
+
+
+}
+
+
+
+
+
+
+/* =====================================================
+   TABLETS HORIZONTAL
+   IPAD / TABLETS GRANDES
+===================================================== */
+
+
+@media (min-width:768px) and (max-width:1023px){
+
+
+
+    #kids-versiculo{
+
+
+        padding-top:105px;
+
+
+        padding-left:24px;
+
+
+        padding-right:24px;
+
+
+    }
+
+
+
+    #kids-versiculo h1{
+
+
+        font-size:2.6rem;
+
+
+    }
+
+
+
+
+    #kids-versiculo .rounded-3xl{
+
+
+        border-radius:24px;
+
+
+    }
+
+
+
+
+    #kids-versiculo .p-4{
+
+
+        padding:1.25rem;
+
+
+    }
+
+
+
+
+    #opciones{
+
+
+        gap:14px;
+
+
+    }
+
+
+
+}
+
+
+
+
+
+/* =====================================================
+   CELULARES GRANDES
+   390px - 767px
+===================================================== */
+
+
+@media (max-width:767px){
+
+
+
+    #kids-versiculo{
+
+
+        min-height:100vh;
+
+
+        padding-top:95px;
+
+
+        padding-bottom:30px;
+
+
+    }
+
+
+
+    #kids-versiculo h1{
+
+
+        font-size:2rem;
+
+
+        line-height:1.15;
+
+
+    }
+
+
+
+
+    #kids-versiculo p{
+
+
+        font-size:.95rem;
+
+
+    }
+
+
+
+
+    #kids-versiculo .rounded-3xl{
+
+
+        border-radius:22px;
+
+
+    }
+
+
+
+
+    #numero-pregunta{
+
+
+        font-size:1.7rem;
+
+
+    }
+
+
+
+
+    #pregunta{
+
+
+        font-size:1rem;
+
+
+        padding:1rem;
+
+
+    }
+
+
+
+
+
+    .kids-option{
+
+
+        min-height:62px;
+
+
+        padding:.75rem 1rem;
+
+
+        font-size:.95rem;
+
+
+    }
+
+
+
+
+
+    .kids-option-letter{
+
+
+        width:34px;
+
+
+        height:34px;
+
+
+        font-size:.9rem;
+
+
+    }
+
+
+
+}
+
+
+
+
+
+/* =====================================================
+   CELULARES PEQUEÑOS
+   320px - 389px
+===================================================== */
+
+
+@media (max-width:389px){
+
+
+
+    #kids-versiculo{
+
+
+        padding-left:12px;
+
+
+        padding-right:12px;
+
+
+    }
+
+
+
+
+    #kids-versiculo h1{
+
+
+        font-size:1.75rem;
+
+
+    }
+
+
+
+
+    #kids-versiculo .text-4xl{
+
+
+        font-size:2rem;
+
+
+    }
+
+
+
+
+    #pregunta{
+
+
+        line-height:1.4;
+
+
+    }
+
+
+
+
+    .kids-option{
+
+
+        gap:.6rem;
+
+
+        font-size:.9rem;
+
+
+    }
+
+
+
+
+}
+
+
+
+
+
+/* =====================================================
+   CONTROL DE ALTURA
+   LAPTOPS BAJAS
+   AJUSTE SIN RECORTAR ICONOS
+===================================================== */
+
+
+@media (max-height:800px) and (min-width:768px){
+
+    #kids-versiculo > .relative.z-10{
+
+        position:relative;
+
+    }
+
+
+}
+
+
+
+/* =====================================================
+   ORIENTACIÓN HORIZONTAL CELULAR
+===================================================== */
+
+
+@media(max-height:500px)
+and (orientation:landscape){
+
+
+
+    #kids-versiculo{
+
+
+        padding-top:85px;
+
+
+    }
+
+
+
+    #kids-versiculo h1{
+
+
+        font-size:1.8rem;
+
+
+    }
+
+/* =====================================================
+   AJUSTE HEADER FIJO + SCROLL DEL JUEGO
+===================================================== */
+
+
+
+
+}
+/* =====================================================
+   TRANSICIÓN SUAVE DEL JUEGO
+===================================================== */
+
+
+#area-juego{
+animation:none;
+}
+
+
+@media(max-width:767px){
+
+#kids-versiculo{
+
+min-height:100vh;
+
+}
+
+
+}
+
+</style>
+
+<script>
+
+import { niveles } from "../../../data/kids/versiculos.js";
+
+
+
+/* =====================================================
+   ELEMENTOS DEL DOM
+===================================================== */
+
+
+const pantallaInicio =
+document.getElementById(
+"pantalla-inicio"
+);
+
+
+const areaJuego =
+document.getElementById(
+"area-juego"
+);
+
+
+const pantallaFinal =
+document.getElementById(
+"pantalla-final"
+);
+
+
+const btnComenzar =
+document.getElementById(
+"btn-comenzar"
+);
+
+
+const jugarNuevo =
+document.getElementById(
+"jugar-nuevo"
+);
+
+
+
+const nivelTexto =
+document.getElementById(
+"nivel"
+);
+
+
+
+const puntosTexto =
+document.getElementById(
+"puntos"
+);
+
+
+
+const preguntaTexto =
+document.getElementById(
+"pregunta"
+);
+
+
+
+const numeroPregunta =
+document.getElementById(
+"numero-pregunta"
+);
+
+
+
+const opcionesContainer =
+document.getElementById(
+"opciones"
+);
+
+
+
+const resultadoFinal =
+document.getElementById(
+"resultado-final"
+);
+
+
+
+const referenciaBiblica =
+document.getElementById(
+"referencia-biblica"
+);
+
+
+
+const explicacionBiblica =
+document.getElementById(
+"explicacion-biblica"
+);
+
+
+
+const barraProgreso =
+document.getElementById(
+"barra-progreso"
+);
+
+
+
+const textoProgreso =
+document.getElementById(
+"texto-progreso"
+);
+
+
+
+
+
+/* =====================================================
+   ESTADO DEL JUEGO
+===================================================== */
+
+
+let nivel = 1;
+
+let puntos = 0;
+
+let preguntaActual = 0;
+
+let preguntasJuego = [];
+
+let respuestasCorrectas = 0;
+
+let bloqueado = false;
+
+
+
+
+
+/* =====================================================
+   SONIDOS
+===================================================== */
+
+
+const sonidoCorrecto =
+new Audio(
+"/audio/kids/correcto.mp3"
+);
+
+
+const sonidoError =
+new Audio(
+"/audio/kids/error.mp3"
+);
+
+
+
+function reproducirSonido(audio){
+
+    if(!audio) return;
+
+    audio.currentTime = 0;
+
+    audio.play()
+    .catch(()=>{});
+
+}
+
+
+
+
+
+/* =====================================================
+   MEZCLA SEGURA
+===================================================== */
+
+
+function mezclar(array){
+
+
+    const nuevo =
+    [...array];
+
+
+    for(
+        let i = nuevo.length - 1;
+        i > 0;
+        i--
+    ){
+
+        const j =
+        Math.floor(
+            Math.random() *
+            (i + 1)
+        );
+
+
+        [
+            nuevo[i],
+            nuevo[j]
+
+        ] = [
+
+            nuevo[j],
+            nuevo[i]
+
+        ];
+
+    }
+
+
+    return nuevo;
+
+}
+
+
+
+
+
+/* =====================================================
+   INICIAR JUEGO
+===================================================== */
+
+
+function iniciarJuego(){
+
+
+    nivel = 1;
+
+    puntos = 0;
+
+    preguntaActual = 0;
+
+    respuestasCorrectas = 0;
+
+
+    actualizarMarcadores();
+
+
+
+    cargarNivel();
+
+
+
+    pantallaInicio.classList.add(
+        "hidden"
+    );
+
+
+    pantallaFinal.classList.add(
+        "hidden"
+    );
+
+
+areaJuego.classList.remove(
+    "hidden"
+);
+
+
+
+}
+
+
+
+
+
+/* =====================================================
+   CARGAR NIVEL
+===================================================== */
+
+
+function cargarNivel(){
+
+
+    const preguntasNivel =
+    niveles[nivel];
+
+
+    if(
+        !preguntasNivel ||
+        preguntasNivel.length === 0
+    ){
+
+        finalizarJuego();
+
+        return;
+
+    }
+
+
+
+    preguntasJuego =
+    mezclar(
+        preguntasNivel
+    );
+
+
+    preguntaActual = 0;
+
+
+    nivelTexto.textContent =
+    nivel;
+
+
+
+    mostrarPregunta();
+
+}
+
+
+
+
+
+/* =====================================================
+   MOSTRAR PREGUNTA
+===================================================== */
+
+
+function mostrarPregunta(){
+
+
+
+    bloqueado = false;
+
+
+
+    const pregunta =
+    preguntasJuego[preguntaActual];
+
+
+
+    if(!pregunta){
+
+        finalizarJuego();
+
+        return;
+
+    }
+
+
+
+
+    numeroPregunta.textContent =
+
+    `${preguntaActual + 1}/${preguntasJuego.length}`;
+
+
+
+    preguntaTexto.textContent =
+    pregunta.pregunta;
+
+
+
+    actualizarProgreso();
+
+
+
+
+    /* REFERENCIA */
+
+    if(
+        pregunta.referencia
+    ){
+
+        referenciaBiblica.textContent =
+        `📖 ${pregunta.referencia}`;
+
+
+        referenciaBiblica.classList.remove(
+            "hidden"
+        );
+
+    }
+
+    else{
+
+
+        referenciaBiblica.classList.add(
+            "hidden"
+        );
+
+
+    }
+
+
+
+
+
+    explicacionBiblica.classList.add(
+        "hidden"
+    );
+
+
+
+
+    opcionesContainer.innerHTML = "";
+
+
+
+
+    const respuestas =
+    mezclar(
+        pregunta.respuestas
+    );
+
+
+
+    respuestas.forEach(
+    (respuesta,index)=>{
+
+
+        const boton =
+        document.createElement(
+            "button"
+        );
+
+
+
+        boton.className =
+        "kids-option";
+
+
+
+        boton.innerHTML = `
+
+        <span class="kids-option-letter">
+
+        ${String.fromCharCode(65 + index)}
+
+        </span>
+
+
+        <span>
+
+        ${respuesta}
+
+        </span>
+
+        `;
+
+
+
+        boton.addEventListener(
+            "click",
+            ()=>seleccionarRespuesta(
+                boton,
+                respuesta,
+                pregunta
+            )
+        );
+
+
+
+        opcionesContainer.appendChild(
+            boton
+        );
+
+
+    });
+
+
+}
+
+
+
+
+
+
+
+/* =====================================================
+   RESPUESTA
+===================================================== */
+
+
+function seleccionarRespuesta(
+boton,
+respuesta,
+pregunta
+){
+
+
+
+    if(bloqueado)
+    return;
+
+
+
+    bloqueado = true;
+
+
+
+    const botones =
+    document.querySelectorAll(
+        ".kids-option"
+    );
+
+
+
+    botones.forEach(
+    b=>{
+
+        b.disabled = true;
+
+    });
+
+
+
+    if(
+        respuesta === pregunta.correcta
+    ){
+
+
+
+        boton.classList.add(
+            "correct"
+        );
+
+
+
+        puntos += 10;
+
+
+        respuestasCorrectas++;
+
+
+        reproducirSonido(
+            sonidoCorrecto
+        );
+
+
+
+        mostrarExplicacion(
+            pregunta,
+            true
+        );
+
+
+    }
+
+    else{
+
+
+        boton.classList.add(
+            "incorrect"
+        );
+
+
+        puntos = Math.max(
+            0,
+            puntos - 2
+        );
+
+
+        reproducirSonido(
+            sonidoError
+        );
+
+
+
+        botones.forEach(
+        b=>{
+
+
+            if(
+                b.textContent.includes(
+                    pregunta.correcta
+                )
+            ){
+
+                b.classList.add(
+                    "correct"
+                );
+
+            }
+
+
+        });
+
+
+
+        mostrarExplicacion(
+            pregunta,
+            false
+        );
+
+
+    }
+
+
+
+    actualizarMarcadores();
+
+}
+
+
+
+
+
+/* =====================================================
+   EXPLICACIÓN
+===================================================== */
+
+
+function mostrarExplicacion(
+pregunta,
+correcta
+){
+
+
+    explicacionBiblica.innerHTML = `
+
+    <div class="font-bold text-xl mb-2">
+
+    ${
+    correcta
+    ?
+    "🎉 ¡Muy bien!"
+    :
+    "📖 Sigue aprendiendo"
+    }
+
+    </div>
+
+
+    <p>
+
+    La respuesta correcta es:
+
+    <strong>
+
+    ${pregunta.correcta}
+
+    </strong>
+
+    </p>
+
+
+    ${
+    pregunta.explicacion
+    ?
+    `<p class="mt-3">
+
+    ${pregunta.explicacion}
+
+    </p>`
+    :
+    ""
+    }
+
+    `;
+
+
+
+    explicacionBiblica.classList.remove(
+        "hidden"
+    );
+
+
+
+    setTimeout(()=>{
+
+
+        siguientePregunta();
+
+
+    },3500);
+
+
+
+}
+
+
+
+
+
+/* =====================================================
+   SIGUIENTE PREGUNTA
+===================================================== */
+
+
+function siguientePregunta(){
+
+
+    preguntaActual++;
+
+
+
+    if(
+        preguntaActual >=
+        preguntasJuego.length
+    ){
+
+
+        completarNivel();
+
+
+        return;
+
+    }
+
+
+
+    mostrarPregunta();
+
+
+}
+
+
+
+
+
+
+/* =====================================================
+   NIVEL COMPLETADO
+===================================================== */
+
+
+function completarNivel(){
+
+
+
+    nivel++;
+
+
+
+    if(
+        !niveles[nivel]
+    ){
+
+        finalizarJuego();
+
+        return;
+
+    }
+
+
+
+    puntos += 50;
+
+
+    cargarNivel();
+
+
+
+}
+
+
+
+
+
+/* =====================================================
+   PROGRESO
+===================================================== */
+
+
+function actualizarProgreso(){
+
+
+
+    const porcentaje =
+
+    (
+        preguntaActual /
+        preguntasJuego.length
+    ) * 100;
+
+
+
+    barraProgreso.style.width =
+
+    `${porcentaje}%`;
+
+
+
+    textoProgreso.textContent =
+
+    `${Math.round(porcentaje)}%`;
+
+}
+
+
+
+
+
+/* =====================================================
+   MARCADORES
+===================================================== */
+
+
+function actualizarMarcadores(){
+
+
+    puntosTexto.textContent =
+    puntos;
+
+
+}
+
+
+
+
+
+
+
+/* =====================================================
+   FINAL
+===================================================== */
+
+
+function finalizarJuego(){
+
+
+
+    areaJuego.classList.add(
+        "hidden"
+    );
+
+
+    pantallaFinal.classList.remove(
+        "hidden"
+    );
+
+
+
+    const mejor =
+    Number(
+        localStorage.getItem(
+            "mejorPuntajeBiblia"
+        )
+        || 0
+    );
+
+
+
+    if(
+        puntos > mejor
+    ){
+
+        localStorage.setItem(
+
+            "mejorPuntajeBiblia",
+
+            puntos
+
+        );
+
+    }
+
+
+
+
+    resultadoFinal.innerHTML = `
+
+    Obtuviste:
+
+    <strong>
+    ${puntos}
+    puntos
+    </strong>
+
+    <br><br>
+
+    Respuestas correctas:
+
+    <strong>
+    ${respuestasCorrectas}
+    </strong>
+
+    `;
+
+
+
+}
+
+
+
+
+
+
+/* =====================================================
+   EVENTOS
+===================================================== */
+
+
+btnComenzar?.addEventListener(
+"click",
+iniciarJuego
+);
+
+
+
+jugarNuevo?.addEventListener(
+"click",
+()=>{
+
+
+    pantallaFinal.classList.add(
+        "hidden"
+    );
+
+
+    iniciarJuego();
+
+
+}
+
+);
+
+
+
+
+</script>
