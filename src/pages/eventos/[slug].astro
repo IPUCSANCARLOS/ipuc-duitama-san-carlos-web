@@ -186,7 +186,7 @@ const content = cleanArticle(rawContent);
 
 
 const shareUrl =
-`${Astro.url.origin}/eventos/${post.slug}`;
+`${Astro.url.origin}${import.meta.env.BASE_URL}eventos/${post.slug}/`;
 
 ---
 
@@ -256,7 +256,7 @@ overflow-hidden
 
 src={
 post.image ||
-"/images/logo-san-carlos.png"
+`${import.meta.env.BASE_URL}images/logo-san-carlos.png`
 }
 
 alt={post.title}
@@ -266,8 +266,8 @@ w-full
 h-full
 object-cover
 "
-/>
 
+/>
 
 
 <div
@@ -581,7 +581,7 @@ loading="lazy"
 
 <a
 
-href="/#eventos"
+href={`${import.meta.env.BASE_URL}#eventos`}
 
 class="
 inline-block
@@ -600,7 +600,6 @@ shadow-lg
 ← Volver a eventos
 
 </a>
-
 
 
 
