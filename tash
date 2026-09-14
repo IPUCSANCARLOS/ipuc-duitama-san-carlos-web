@@ -1,0 +1,102 @@
+[1mdiff --git a/src/components/Eventos.astro b/src/components/Eventos.astro[m
+[1mindex 7627daa..5389858 100644[m
+[1m--- a/src/components/Eventos.astro[m
+[1m+++ b/src/components/Eventos.astro[m
+[36m@@ -185,7 +185,7 @@[m [mmb-12[m
+ [m
+ <img[m
+ [m
+[31m-src={featuredPost.image}[m
+[32m+[m[32msrc={featuredPost.image || `${import.meta.env.BASE_URL}images/logo-san-carlos.png`}[m
+ [m
+ alt={featuredPost.title}[m
+ [m
+[36m@@ -383,7 +383,7 @@[m [mrelative[m
+ [m
+ <img[m
+ [m
+[31m-src={post.image}[m
+[32m+[m[32msrc={post.image || `${import.meta.env.BASE_URL}images/logo-san-carlos.png`}[m
+ [m
+ alt={post.title}[m
+ [m
+[36m@@ -538,7 +538,7 @@[m [mmt-16[m
+ [m
+ <a[m
+ [m
+[31m-href="/eventos"[m
+[32m+[m[32mhref={`${import.meta.env.BASE_URL}eventos/`}[m
+ [m
+ class="[m
+ inline-flex[m
+[1mdiff --git a/src/lib/blogger.js b/src/lib/blogger.js[m
+[1mindex da79218..918fe1d 100644[m
+[1m--- a/src/lib/blogger.js[m
+[1m+++ b/src/lib/blogger.js[m
+[36m@@ -1,10 +1,11 @@[m
+ import Parser from "rss-parser";[m
+ [m
+ [m
+[31m-[m
+ const parser = new Parser();[m
+ [m
+ [m
+[32m+[m[32mconst BASE_URL = import.meta.env.BASE_URL;[m
+[32m+[m
+ [m
+ const BLOG_URL =[m
+ "https://ipucsancarlos.blogspot.com/feeds/posts/default?alt=rss&max-results=100";[m
+[36m@@ -13,7 +14,6 @@[m [mconst BLOG_URL =[m
+ [m
+ [m
+ [m
+[31m-[m
+ export async function getPosts(){[m
+ [m
+ [m
+[36m@@ -157,31 +157,22 @@[m [mOBTENER IMAGEN PRINCIPAL[m
+ [m
+ function getImage(content){[m
+ [m
+[31m-[m
+ if(!content){[m
+ [m
+[31m-return "/images/logo-san-carlos.png";[m
+[32m+[m[32mreturn `${BASE_URL}images/logo-san-carlos.png`;[m
+ [m
+ }[m
+ [m
+ [m
+[31m-[m
+ const match =[m
+[31m-[m
+ content.match([m
+[31m-[m
+ /<img[^>]+src=["']([^"']+)["']/[m
+[31m-[m
+ );[m
+ [m
+ [m
+[31m-[m
+ return match[m
+[31m-[m
+[31m-? match[1][m
+[31m-[m
+[31m-: "/images/logo-san-carlos.png";[m
+[31m-[m
+[32m+[m[32m? match[1].trim()[m
+[32m+[m[32m: `${BASE_URL}images/logo-san-carlos.png`;[m
+ [m
+ }[m
+ [m
+[36m@@ -189,10 +180,6 @@[m [mreturn match[m
+ [m
+ [m
+ [m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+ /*[m
+ LIMPIAR CONTENIDO COMPLETO[m
+ */[m

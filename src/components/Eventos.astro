@@ -185,7 +185,7 @@ mb-12
 
 <img
 
-src={featuredPost.image}
+src={featuredPost.image || `${import.meta.env.BASE_URL}images/logo-san-carlos.png`}
 
 alt={featuredPost.title}
 
@@ -383,7 +383,7 @@ relative
 
 <img
 
-src={post.image}
+src={post.image || `${import.meta.env.BASE_URL}images/logo-san-carlos.png`}
 
 alt={post.title}
 
@@ -538,7 +538,7 @@ mt-16
 
 <a
 
-href="/eventos"
+href={`${import.meta.env.BASE_URL}eventos/`}
 
 class="
 inline-flex

@@ -1,14 +1,14 @@
 import Parser from "rss-parser";
 
 
-
 const parser = new Parser();
 
+
+const BASE_URL = import.meta.env.BASE_URL;
 
 
 const BLOG_URL =
 "https://ipucsancarlos.blogspot.com/feeds/posts/default?alt=rss&max-results=100";
-
 
 
 
@@ -157,37 +157,24 @@ OBTENER IMAGEN PRINCIPAL
 
 function getImage(content){
 
-
 if(!content){
 
-return "/images/logo-san-carlos.png";
+return `${BASE_URL}images/logo-san-carlos.png`;
 
 }
-
 
 
 const match =
-
 content.match(
-
 /<img[^>]+src=["']([^"']+)["']/
-
 );
 
 
-
 return match
-
-? match[1]
-
-: "/images/logo-san-carlos.png";
-
+? match[1].trim()
+: `${BASE_URL}images/logo-san-carlos.png`;
 
 }
-
-
-
-
 
 
 
