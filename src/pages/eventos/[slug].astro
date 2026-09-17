@@ -2,6 +2,16 @@
 import Layout from "../../layouts/Layout.astro";
 import { getPosts } from "../../lib/blogger";
 
+import {
+extractBloggerImages
+} from "../../lib/bloggerImages";
+
+
+import {
+extractBloggerVideos
+} from "../../lib/bloggerVideos";
+
+
 
 export async function getStaticPaths(){
 
@@ -29,7 +39,9 @@ const {post}=Astro.props;
 
 if(!post){
 
-return Astro.redirect("/eventos");
+return Astro.redirect(
+`${import.meta.env.BASE_URL}eventos/`
+);
 
 }
 
@@ -43,44 +55,58 @@ const rawContent = post.content || "";
 
 /*
 =========================================
- EXTRAER IMAGENES DE BLOGGER
+ EXTRAER IMÁGENES DE BLOGGER
 =========================================
 */
 
+let images =
+extractBloggerImages(rawContent);
 
-const images = [
 
-...rawContent.matchAll(
-/<img[^>]+src=["']([^"']+)["']/gi
-)
 
-]
 
-.map(
-(item)=>item[1]
-)
-
-.filter(Boolean)
-
-.filter(
-(img,index,array)=>
-array.indexOf(img)===index
-)
-
-.filter(
-(img)=>img !== post.image
+console.log(
+"================================="
 );
 
 
+console.log(
+"EVENTO:",
+post.title
+);
+
+
+console.log(
+"CONTENIDO RAW:",
+rawContent.substring(0,1000)
+);
+
+console.log(
+"TOTAL IMAGENES:",
+images.length
+);
+
+const videos =
+extractBloggerVideos(rawContent);
+
+
+console.log(
+"TOTAL VIDEOS:",
+videos.length
+);
+
+
+console.table(videos);
 
 
 
 
-
-
+console.log(
+"================================="
+);
 /*
 =========================================
- LIMPIAR ARTICULO
+ LIMPIAR ARTÍCULO
 =========================================
 */
 
@@ -98,15 +124,11 @@ return "";
 return html
 
 
-// quitar css
-
 .replace(
 /<style[\s\S]*?<\/style>/gi,
 ""
 )
 
-
-// quitar javascript
 
 .replace(
 /<script[\s\S]*?<\/script>/gi,
@@ -114,15 +136,11 @@ return html
 )
 
 
-// quitar comentarios
-
 .replace(
 /<!--[\s\S]*?-->/g,
 ""
 )
 
-
-// quitar visor blogger
 
 .replace(
 /🔍|×|›|‹|&nbsp;|&#10005;|&#10094;|&#10095;/g,
@@ -130,20 +148,17 @@ return html
 )
 
 
-// quitar imagenes
-
 .replace(
 /<img[^>]*>/gi,
 ""
 )
 
 
-// quitar enlaces blogger
-
 .replace(
 /<a[^>]*>/gi,
 ""
 )
+
 
 .replace(
 /<\/a>/gi,
@@ -151,15 +166,11 @@ return html
 )
 
 
-// quitar clases blogger
-
 .replace(
 /class="[^"]*"/gi,
 ""
 )
 
-
-// quitar estilos inline
 
 .replace(
 /style="[^"]*"/gi,
@@ -167,12 +178,11 @@ return html
 )
 
 
-// eliminar div vacios
-
 .replace(
 /<div>\s*<\/div>/gi,
 ""
 )
+
 
 .trim();
 
@@ -188,7 +198,13 @@ const content = cleanArticle(rawContent);
 const shareUrl =
 `${Astro.url.origin}${import.meta.env.BASE_URL}eventos/${post.slug}/`;
 
+
+console.table(images);
+
+const galleryImages = images;
+
 ---
+
 
 
 
@@ -202,27 +218,29 @@ description={post.description}
 >
 
 
-
-
 <main
+
 class="
 pt-28
 pb-24
-bg-gradient-to-b
+bg-gradient-to-br
 from-gray-50
-to-white
+via-white
+to-blue-50
 "
+
 >
 
 
 <div
+
 class="
 max-w-6xl
 mx-auto
 px-6
 "
->
 
+>
 
 
 <article
@@ -233,22 +251,26 @@ rounded-[2rem]
 shadow-2xl
 overflow-hidden
 "
+
 >
 
 
 
 
-
-<!-- PORTADA -->
+<!-- =========================
+     PORTADA
+========================= -->
 
 
 <section
+
 class="
 relative
-h-[350px]
-md:h-[560px]
+h-[420px]
+md:h-[650px]
 overflow-hidden
 "
+
 >
 
 
@@ -265,12 +287,14 @@ class="
 w-full
 h-full
 object-cover
+object-[center_20%]
 "
-
 />
 
 
+
 <div
+
 class="
 absolute
 inset-0
@@ -279,7 +303,9 @@ from-[#00338D]
 via-[#00338D]/50
 to-transparent
 "
+
 ></div>
+
 
 
 
@@ -344,8 +370,9 @@ leading-tight
 
 
 
-
-<!-- INFORMACION -->
+<!-- =========================
+     INFORMACIÓN
+========================= -->
 
 
 <section
@@ -376,6 +403,7 @@ pb-8
 
 <div>
 
+
 <p class="text-gray-500">
 
 Fecha del evento
@@ -395,6 +423,7 @@ text-[#00338D]
 
 
 {
+
 post.date
 
 ?
@@ -418,6 +447,7 @@ day:"numeric"
 
 </p>
 
+
 </div>
 
 
@@ -433,6 +463,8 @@ post.title+" "+shareUrl
 }
 
 target="_blank"
+
+rel="noopener noreferrer"
 
 class="
 bg-green-500
@@ -459,8 +491,9 @@ Compartir WhatsApp
 
 
 
-
-<!-- TEXTO -->
+<!-- =========================
+     CONTENIDO
+========================= -->
 
 
 <div
@@ -476,19 +509,14 @@ set:html={content}
 
 
 
-
-
-
-
-
-
-<!-- GALERIA -->
+<!-- =========================
+     VIDEO DEL EVENTO
+========================= -->
 
 
 {
 
-images.length >0 &&
-
+videos.length > 0 &&
 
 <section
 
@@ -510,49 +538,109 @@ mb-8
 
 >
 
-Galería del evento
+Video del evento
 
 </h2>
 
 
 
-
 <div
 
 class="
-gallery
+aspect-video
+rounded-3xl
+overflow-hidden
+shadow-xl
 "
 
 >
 
 
-{
+<iframe
 
+src={videos[0]}
+
+class="
+w-full
+h-full
+"
+
+title="Video del evento"
+
+allowfullscreen
+
+></iframe>
+
+
+</div>
+
+
+</section>
+
+}
+
+
+
+<!-- =========================
+     GALERÍA
+========================= -->
+
+{
+images.length > 0 &&
+
+<section class="mt-16">
+
+<div class="gallery-header">
+
+<h2>
+Galería fotográfica del evento
+</h2>
+
+<p>
+Momentos que reflejan nuestra historia y comunidad
+</p>
+
+<p class="photo-counter">
+📷 {images.length} fotografías
+</p>
+
+<div class="gallery-line"></div>
+
+</div>
+
+
+<div class="gallery">
+
+
+{
 images.map(
 (img,index)=>(
 
 
-<div
+<button
 
-class="
-gallery-card
-"
+type="button"
+
+class="gallery-card gallery-open"
+
+data-index={index}
 
 >
-
 
 <img
 
 src={img}
 
-alt={`${post.title}-${index}`}
-
 loading="lazy"
+
+decoding="async"
+
+alt={`${post.title}-${index+1}`}
 
 />
 
 
-</div>
+</button>
 
 
 )
@@ -563,17 +651,98 @@ loading="lazy"
 
 
 </div>
-
 
 
 </section>
 
-
 }
 
 
 
 
+<!-- =========================
+     LIGHTBOX
+========================= -->
+
+
+<div
+
+id="lightbox"
+
+class="lightbox"
+
+aria-hidden="true"
+
+>
+
+
+<button
+
+id="close-lightbox"
+
+class="lightbox-close"
+
+aria-label="Cerrar"
+
+>
+
+×
+
+</button>
+
+
+
+<button
+
+id="prev-image"
+
+class="
+lightbox-arrow
+left
+"
+
+aria-label="Anterior"
+
+>
+
+‹
+
+</button>
+
+
+
+<img
+
+id="lightbox-img"
+
+src=""
+
+alt=""
+
+/>
+
+
+
+<button
+
+id="next-image"
+
+class="
+lightbox-arrow
+right
+"
+
+aria-label="Siguiente"
+
+>
+
+›
+
+</button>
+
+
+</div>
+</section>
 
 
 
@@ -602,14 +771,7 @@ shadow-lg
 </a>
 
 
-
-</section>
-
-
-
-
 </article>
-
 
 
 </div>
@@ -617,6 +779,226 @@ shadow-lg
 
 </main>
 
+
+
+
+<script define:vars={{ galleryImages }}>
+
+
+const imagesGallery =
+galleryImages || [];
+
+
+const lightbox =
+document.querySelector("#lightbox");
+
+
+const lightboxImg =
+document.querySelector("#lightbox-img");
+
+
+const buttons =
+document.querySelectorAll(".gallery-open");
+
+
+const close =
+document.querySelector("#close-lightbox");
+
+
+const next =
+document.querySelector("#next-image");
+
+
+const prev =
+document.querySelector("#prev-image");
+
+
+let current = 0;
+
+
+
+function showImage(){
+
+if(!imagesGallery[current]){
+return;
+}
+
+
+lightboxImg.src =
+imagesGallery[current];
+
+
+lightboxImg.alt =
+`Imagen ${current+1}`;
+
+}
+
+
+
+
+function openImage(index){
+
+
+current=index;
+
+
+showImage();
+
+
+lightbox.classList.add("active");
+
+
+document.body.style.overflow="hidden";
+
+
+}
+
+
+
+
+function closeImage(){
+
+
+lightbox.classList.remove("active");
+
+
+document.body.style.overflow="";
+
+}
+
+
+
+
+function nextImage(){
+
+
+current++;
+
+
+if(current >= imagesGallery.length){
+
+current=0;
+
+}
+
+
+showImage();
+
+}
+
+
+
+
+function previousImage(){
+
+
+current--;
+
+
+if(current < 0){
+
+current =
+imagesGallery.length-1;
+
+}
+
+
+showImage();
+
+}
+
+
+
+
+
+buttons.forEach(
+(btn)=>{
+
+
+btn.addEventListener(
+"click",
+()=>{
+
+openImage(
+Number(btn.dataset.index)
+);
+
+
+});
+
+
+});
+
+
+
+
+close.addEventListener(
+"click",
+closeImage
+);
+
+
+
+next.addEventListener(
+"click",
+nextImage
+);
+
+
+
+prev.addEventListener(
+"click",
+previousImage
+);
+
+
+
+
+
+lightbox.addEventListener(
+"click",
+(e)=>{
+
+
+if(e.target===lightbox){
+
+closeImage();
+
+}
+
+
+});
+
+
+
+
+
+document.addEventListener(
+"keydown",
+(e)=>{
+
+
+if(!lightbox.classList.contains("active"))
+return;
+
+
+if(e.key==="Escape")
+closeImage();
+
+
+if(e.key==="ArrowRight")
+nextImage();
+
+
+if(e.key==="ArrowLeft")
+previousImage();
+
+
+});
+
+
+
+</script>
 
 
 
@@ -665,6 +1047,15 @@ margin-bottom:1rem;
 
 
 
+
+
+/*
+==========================
+ GALERÍA
+==========================
+*/
+
+
 .gallery{
 
 display:grid;
@@ -680,14 +1071,47 @@ gap:1.5rem;
 
 .gallery-card{
 
-overflow:hidden;
+border:none;
 
-border-radius:1.5rem;
+padding:0;
 
 background:white;
 
+cursor:pointer;
+
+border-radius:24px;
+
+overflow:hidden;
+
+position:relative;
+
 box-shadow:
-0 15px 35px rgba(0,0,0,.15);
+
+0 12px 35px rgba(0,51,141,.12);
+
+transition:
+
+transform .35s ease,
+box-shadow .35s ease;
+
+
+animation:
+
+galleryShow .6s ease both;
+
+}
+
+
+.gallery-card:hover{
+
+transform:
+
+translateY(-8px);
+
+
+box-shadow:
+
+0 25px 50px rgba(0,51,141,.25);
 
 }
 
@@ -697,13 +1121,21 @@ box-shadow:
 
 width:100%;
 
-height:350px;
+height:320px;
+
 
 object-fit:cover;
 
+
+background:#f8fafc;
+
+
 display:block;
 
-transition:.4s;
+
+transition:
+
+transform .5s ease;
 
 }
 
@@ -711,7 +1143,71 @@ transition:.4s;
 
 .gallery-card:hover img{
 
-transform:scale(1.05);
+transform:
+
+scale(1.06);
+
+}
+
+.gallery-card::after{
+
+content:"🔍";
+
+
+position:absolute;
+
+
+top:15px;
+
+right:15px;
+
+
+width:45px;
+
+height:45px;
+
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+
+border-radius:50%;
+
+
+background:white;
+
+
+box-shadow:
+
+0 5px 15px rgba(0,0,0,.2);
+
+
+opacity:0;
+
+
+transform:scale(.8);
+
+
+transition:.3s;
+
+}
+
+
+
+.gallery-card:hover::after{
+
+opacity:1;
+
+transform:scale(1);
+
+}
+
+.gallery-card:hover img{
+
+transform:scale(1.03);
 
 }
 
@@ -719,31 +1215,335 @@ transform:scale(1.05);
 
 
 
-@media(max-width:1024px){
+
+/* ==========================
+   LIGHTBOX IPUC
+========================== */
 
 
-.gallery{
+.lightbox{
 
-grid-template-columns:
-repeat(2,1fr);
+position:fixed;
+
+inset:0;
+
+background:
+rgba(0,0,0,.94);
+
+z-index:99999;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+padding:25px;
+
+
+opacity:0;
+
+visibility:hidden;
+
+transition:
+opacity .3s ease;
+
+backdrop-filter:
+blur(6px);
 
 }
 
+
+
+.lightbox.active{
+
+opacity:1;
+
+visibility:visible;
+
+}
+
+
+
+
+#lightbox-img{
+
+max-width:90vw;
+
+max-height:85vh;
+
+width:auto;
+
+height:auto;
+
+object-fit:contain;
+
+border-radius:18px;
+
+animation:
+
+imageZoom .3s ease;
+
+}
+
+@keyframes imageZoom{
+
+
+from{
+
+opacity:0;
+
+transform:
+
+scale(.92);
+
+}
+
+
+to{
+
+opacity:1;
+
+transform:
+
+scale(1);
+
+}
+
+
+}
+
+max-height:85vh;
+
+
+width:auto;
+
+height:auto;
+
+
+object-fit:contain;
+
+
+border-radius:18px;
+
+
+box-shadow:
+
+0 30px 80px rgba(0,0,0,.55);
+
+
 }
 
 
 
-@media(max-width:640px){
 
 
-.article-content{
+/* ======================
+   BOTON CERRAR
+====================== */
 
-font-size:1rem;
 
-line-height:1.7;
+.lightbox-close{
+
+
+position:absolute;
+
+
+top:25px;
+
+right:30px;
+
+
+width:58px;
+
+height:58px;
+
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+
+border-radius:50%;
+
+
+border:
+
+3px solid #00338D;
+
+
+background:white;
+
+
+color:#00338D;
+
+
+font-size:38px;
+
+
+font-weight:700;
+
+
+cursor:pointer;
+
+
+z-index:100001;
+
+
+box-shadow:
+
+0 10px 30px rgba(0,0,0,.35);
+
+
+transition:.25s;
+
 
 }
 
+
+
+.lightbox-close:hover{
+
+
+background:#F0AB00;
+
+
+color:white;
+
+
+border-color:#F0AB00;
+
+
+transform:
+
+rotate(90deg)
+scale(1.08);
+
+
+}
+
+
+
+
+/* ======================
+   FLECHAS
+====================== */
+
+
+.lightbox-arrow{
+
+
+position:absolute;
+
+
+top:50%;
+
+
+transform:
+
+translateY(-50%);
+
+
+width:65px;
+
+
+height:65px;
+
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+
+border-radius:50%;
+
+
+border:
+
+3px solid #F0AB00;
+
+
+background:
+
+#00338D;
+
+
+color:white;
+
+
+font-size:48px;
+
+
+font-weight:700;
+
+
+line-height:1;
+
+
+cursor:pointer;
+
+
+z-index:100001;
+
+
+box-shadow:
+
+0 12px 35px rgba(0,0,0,.45);
+
+
+transition:.25s;
+
+
+}
+
+
+
+.lightbox-arrow:hover{
+
+
+background:#F0AB00;
+
+
+border-color:white;
+
+
+transform:
+
+translateY(-50%)
+scale(1.12);
+
+
+color:#00338D;
+
+
+}
+
+
+
+
+.lightbox-arrow.left{
+
+left:35px;
+
+}
+
+
+
+.lightbox-arrow.right{
+
+right:35px;
+
+}
+
+
+
+
+
+@media(max-width:600px){
 
 
 .gallery{
@@ -753,19 +1553,113 @@ grid-template-columns:1fr;
 }
 
 
-
 .gallery-card img{
 
-height:auto;
+height:260px;
 
-aspect-ratio:4/3;
+}
+
+
+
+
+#lightbox-img{
+
+
+max-width:94vw;
+
+max-height:78vh;
+
+
+}
+
+
+
+
+.lightbox-close{
+
+
+width:45px;
+
+height:45px;
+
+
+top:12px;
+
+right:12px;
+
+
+font-size:28px;
+
+
+}
+
+
+
+
+.lightbox-arrow{
+
+
+width:48px;
+
+height:48px;
+
+
+font-size:34px;
+
+
+border-width:2px;
+
+
+}
+
+
+
+
+.lightbox-arrow.left{
+
+left:10px;
+
+}
+
+
+
+.lightbox-arrow.right{
+
+right:10px;
+
+}
+
+
+
+}
+
+@keyframes galleryShow{
+
+
+from{
+
+opacity:0;
+
+transform:
+
+translateY(20px);
+
+}
+
+
+
+to{
+
+opacity:1;
+
+transform:
+
+translateY(0);
 
 }
 
 
 }
-
-
 
 </style>
 
