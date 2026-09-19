@@ -3,14 +3,15 @@ import Layout from "../../layouts/Layout.astro";
 import { getPosts } from "../../lib/blogger";
 
 import {
-extractBloggerImages
+extractBloggerImages,
+optimizeBloggerUrl
 } from "../../lib/bloggerImages";
 
 
 import {
-optimizeCoverImage,
-optimizeGalleryImages
-} from "../../lib/imageOptimizer";
+createThumbnail
+}
+from "../../lib/imageOptimizer";
 
 
 import {
@@ -67,8 +68,7 @@ const rawContent = post.content || "";
 
 let images =
 extractBloggerImages(
-rawContent,
-900
+rawContent
 );
 
 
@@ -208,12 +208,46 @@ const shareUrl =
 `${Astro.url.origin}${import.meta.env.BASE_URL}eventos/${post.slug}/`;
 
 
+/*
+=========================================
+ IMÁGENES GALERÍA
+=========================================
+*/
+
+
+/*
+=========================================
+ GALERÍA OPTIMIZADA
+=========================================
+*/
+
+
+// Imagen grande para visor
 const galleryImages =
-optimizeGalleryImages(images,900);
+images.map(
+(img)=>
+optimizeBloggerUrl(
+img,
+1600
+)
+);
 
 
-images = galleryImages;
 
+/*
+=========================================
+ MINIATURAS OPTIMIZADAS
+=========================================
+*/
+
+const galleryThumbs =
+images.map(
+(img)=>
+optimizeBloggerUrl(
+img,
+500
+)
+);
 ---
 
 
@@ -288,14 +322,21 @@ overflow-hidden
 <img
 
 src={
-post.image
-?
-optimizeCoverImage(post.image)
-:
+post.image ||
 `${import.meta.env.BASE_URL}images/logo-san-carlos.png`
 }
 
 alt={post.title}
+
+loading="eager"
+
+fetchpriority="high"
+
+decoding="async"
+
+width="1200"
+
+height="650"
 
 class="
 w-full
@@ -303,6 +344,7 @@ h-full
 object-cover
 object-[center_20%]
 "
+
 />
 
 
@@ -602,21 +644,30 @@ allowfullscreen
 {
 images.length > 0 &&
 
-<section class="mt-16">
+<section
+
+class="
+mt-16
+rounded-3xl
+bg-gradient-to-b
+from-white
+to-blue-50
+p-6
+"
+
+>
 
 <div class="gallery-header">
 
 <h2>
-Galería fotográfica del evento
+Galería fotográfica
 </h2>
 
-<p>
-Momentos que reflejan nuestra historia y comunidad
-</p>
 
 <p class="photo-counter">
-📷 {images.length} fotografías
+{images.length} momentos capturados
 </p>
+
 
 <div class="gallery-line"></div>
 
@@ -627,7 +678,11 @@ Momentos que reflejan nuestra historia y comunidad
 
 
 {
-images.map(
+
+galleryThumbs
+.slice(0,12)
+.map(
+
 (img,index)=>(
 
 
@@ -649,6 +704,10 @@ loading="lazy"
 
 decoding="async"
 
+width="500"
+
+height="350"
+
 alt={`${post.title}-${index+1}`}
 
 />
@@ -664,7 +723,39 @@ alt={`${post.title}-${index+1}`}
 }
 
 
+
 </div>
+
+{
+
+galleryThumbs.length > 24 &&
+
+<button
+
+id="load-more-gallery"
+
+class="
+mt-10
+mx-auto
+block
+bg-[#00338D]
+text-white
+px-8
+py-4
+rounded-full
+font-bold
+shadow-lg
+hover:bg-[#F0AB00]
+transition
+"
+
+>
+
+Ver más fotos
+
+</button>
+
+}
 
 
 </section>
@@ -795,8 +886,7 @@ shadow-lg
 
 
 
-
-<script define:vars={{ galleryImages }}>
+<script define:vars={{ galleryImages, galleryThumbs }}>
 
 
 const imagesGallery =
@@ -814,6 +904,11 @@ document.querySelector("#lightbox-img");
 const buttons =
 document.querySelectorAll(".gallery-open");
 
+const loadMoreButton =
+document.querySelector("#load-more-gallery");
+
+
+let visibleImages = 24;
 
 const close =
 document.querySelector("#close-lightbox");
@@ -838,16 +933,37 @@ return;
 }
 
 
+lightboxImg.classList.remove("loaded");
+
+
+const img = new Image();
+
+
+img.onload = ()=>{
+
 lightboxImg.src =
 imagesGallery[current];
 
 
-lightboxImg.alt =
-`Imagen ${current+1}`;
+lightboxImg.classList.add("loaded");
+
+};
+
+
+img.onerror = ()=>{
+
+console.error(
+"Error cargando imagen:",
+imagesGallery[current]
+);
+
+};
+
+
+img.src =
+imagesGallery[current];
 
 }
-
-
 
 
 function openImage(index){
@@ -861,6 +977,10 @@ showImage();
 
 lightbox.classList.add("active");
 
+lightbox.setAttribute(
+"aria-hidden",
+"false"
+);
 
 document.body.style.overflow="hidden";
 
@@ -875,6 +995,10 @@ function closeImage(){
 
 lightbox.classList.remove("active");
 
+lightbox.setAttribute(
+"aria-hidden",
+"true"
+);
 
 document.body.style.overflow="";
 
@@ -922,51 +1046,160 @@ showImage();
 }
 
 
+function loadMoreImages(){
+
+
+const gallery =
+document.querySelector(".gallery");
+
+
+const nextImages =
+galleryThumbs
+.slice(
+visibleImages,
+visibleImages + 24
+);
+
+nextImages.forEach(
+
+(img,index)=>{
+
+
+const realIndex =
+visibleImages + index;
 
 
 
-buttons.forEach(
-(btn)=>{
+const button =
+document.createElement("button");
 
 
-btn.addEventListener(
+button.type="button";
+
+
+button.className =
+"gallery-card gallery-open";
+
+
+button.dataset.index =
+realIndex;
+
+
+
+button.innerHTML = `
+
+<img
+
+src="${galleryThumbs[realIndex]}"
+
+loading="lazy"
+
+decoding="async"
+
+width="600"
+
+height="450"
+
+referrerpolicy="no-referrer"
+
+alt="Imagen ${realIndex+1}"
+
+/>
+
+`;
+
+
+
+button.addEventListener(
 "click",
 ()=>{
 
-openImage(
-Number(btn.dataset.index)
+openImage(realIndex);
+
+}
+
 );
 
 
+
+gallery.appendChild(button);
+
+
+
 });
 
 
-});
+visibleImages += 24;
+
+
+
+if(
+visibleImages >= galleryThumbs.length
+){
+
+loadMoreButton.style.display="none";
+
+}
+
+
+}
+
+
+document.addEventListener(
+"click",
+(e)=>{
+
+
+const button =
+e.target.closest(
+".gallery-open"
+);
+
+
+if(!button){
+return;
+}
+
+
+openImage(
+Number(button.dataset.index)
+);
+
+
+}
+);
 
 
 
 
-close.addEventListener(
+close?.addEventListener(
 "click",
 closeImage
 );
 
 
 
-next.addEventListener(
+next?.addEventListener(
 "click",
 nextImage
 );
 
 
 
-prev.addEventListener(
+prev?.addEventListener(
 "click",
 previousImage
 );
 
 
+if(loadMoreButton){
 
+loadMoreButton.addEventListener(
+"click",
+loadMoreImages
+);
+
+}
 
 
 lightbox.addEventListener(
@@ -1016,9 +1249,12 @@ previousImage();
 
 
 
-
-
 <style>
+
+
+/* =====================================================
+   CONTENIDO ARTÍCULO
+===================================================== */
 
 
 .article-content{
@@ -1059,16 +1295,56 @@ margin-bottom:1rem;
 
 
 
+/* =====================================================
+   GALERÍA
+===================================================== */
+
+.gallery-header{
+
+text-align:center;
+
+margin-bottom:2rem;
+
+}
 
 
+.gallery-header h2{
+
+font-size:1.8rem;
+
+font-weight:800;
+
+color:#00338D;
+
+margin-bottom:.5rem;
+
+}
 
 
-/*
-==========================
- GALERÍA
-==========================
-*/
+.photo-counter{
 
+font-size:.95rem;
+
+color:#64748b;
+
+font-weight:600;
+
+}
+
+
+.gallery-line{
+
+width:70px;
+
+height:4px;
+
+background:#F0AB00;
+
+border-radius:20px;
+
+margin:1rem auto;
+
+}
 
 .gallery{
 
@@ -1082,6 +1358,8 @@ gap:1.5rem;
 }
 
 
+
+/* Tarjeta */
 
 .gallery-card{
 
@@ -1105,51 +1383,43 @@ box-shadow:
 
 transition:
 
-transform .35s ease,
-box-shadow .35s ease;
-
-
-animation:
-
-galleryShow .6s ease both;
+transform .3s ease,
+box-shadow .3s ease;
 
 }
 
 
-.gallery-card:hover{
 
-transform:
-
-translateY(-8px);
-
-
-box-shadow:
-
-0 25px 50px rgba(0,51,141,.25);
-
-}
-
+/* Imagen miniatura */
 
 
 .gallery-card img{
 
 width:100%;
-
-height:320px;
-
-
+height:300px;
 object-fit:cover;
-
-
-background:#f8fafc;
-
-
 display:block;
-
-
+background:#f1f5f9;
+opacity:1;
 transition:
+transform .35s ease;
 
-transform .5s ease;
+}
+
+
+
+
+/* Hover escritorio */
+
+
+.gallery-card:hover{
+
+transform:
+translateY(-5px);
+
+box-shadow:
+
+0 20px 45px rgba(0,51,141,.22);
 
 }
 
@@ -1158,28 +1428,28 @@ transform .5s ease;
 .gallery-card:hover img{
 
 transform:
-
-scale(1.06);
+scale(1.04);
 
 }
+
+
+
+/* Icono lupa */
+
 
 .gallery-card::after{
 
 content:"🔍";
 
-
 position:absolute;
-
 
 top:15px;
 
 right:15px;
 
-
 width:45px;
 
 height:45px;
-
 
 display:flex;
 
@@ -1187,23 +1457,17 @@ align-items:center;
 
 justify-content:center;
 
-
 border-radius:50%;
 
-
 background:white;
-
 
 box-shadow:
 
 0 5px 15px rgba(0,0,0,.2);
 
-
 opacity:0;
 
-
 transform:scale(.8);
-
 
 transition:.3s;
 
@@ -1219,20 +1483,11 @@ transform:scale(1);
 
 }
 
-.gallery-card:hover img{
-
-transform:scale(1.03);
-
-}
 
 
-
-
-
-
-/* ==========================
-   LIGHTBOX IPUC
-========================== */
+/* =====================================================
+   LIGHTBOX GENERAL
+===================================================== */
 
 
 .lightbox{
@@ -1242,6 +1497,7 @@ position:fixed;
 inset:0;
 
 background:
+
 rgba(0,0,0,.94);
 
 z-index:99999;
@@ -1252,17 +1508,18 @@ align-items:center;
 
 justify-content:center;
 
-padding:25px;
-
+padding:30px;
 
 opacity:0;
 
 visibility:hidden;
 
 transition:
+
 opacity .3s ease;
 
 backdrop-filter:
+
 blur(6px);
 
 }
@@ -1279,12 +1536,16 @@ visibility:visible;
 
 
 
+/* Imagen grande */
+
 
 #lightbox-img{
 
-max-width:90vw;
+opacity:0;
 
-max-height:85vh;
+max-width:92vw;
+
+max-height:82vh;
 
 width:auto;
 
@@ -1292,13 +1553,36 @@ height:auto;
 
 object-fit:contain;
 
+display:block;
+
 border-radius:18px;
+
+box-shadow:
+
+0 30px 80px rgba(0,0,0,.55);
+
+transition:
+
+opacity .3s ease,
+transform .3s ease;
+
+}
+
+
+
+#lightbox-img.loaded{
+
+opacity:1;
 
 animation:
 
-imageZoom .3s ease;
+imageZoom .35s ease;
 
 }
+
+
+
+
 
 @keyframes imageZoom{
 
@@ -1309,7 +1593,7 @@ opacity:0;
 
 transform:
 
-scale(.92);
+scale(.94);
 
 }
 
@@ -1327,34 +1611,13 @@ scale(1);
 
 }
 
-max-height:85vh;
-
-
-width:auto;
-
-height:auto;
-
-
-object-fit:contain;
-
-
-border-radius:18px;
-
-
-box-shadow:
-
-0 30px 80px rgba(0,0,0,.55);
-
-
-}
 
 
 
 
-
-/* ======================
-   BOTON CERRAR
-====================== */
+/* =====================================================
+   BOTÓN CERRAR IPUC
+===================================================== */
 
 
 .lightbox-close{
@@ -1413,7 +1676,6 @@ box-shadow:
 
 transition:.25s;
 
-
 }
 
 
@@ -1435,15 +1697,14 @@ transform:
 rotate(90deg)
 scale(1.08);
 
-
 }
 
 
 
 
-/* ======================
-   FLECHAS
-====================== */
+/* =====================================================
+   BOTONES ANTERIOR / SIGUIENTE
+===================================================== */
 
 
 .lightbox-arrow{
@@ -1481,9 +1742,7 @@ border:
 3px solid #F0AB00;
 
 
-background:
-
-#00338D;
+background:#00338D;
 
 
 color:white;
@@ -1511,7 +1770,6 @@ box-shadow:
 
 transition:.25s;
 
-
 }
 
 
@@ -1525,17 +1783,15 @@ background:#F0AB00;
 border-color:white;
 
 
+color:#00338D;
+
+
 transform:
 
 translateY(-50%)
 scale(1.12);
 
-
-color:#00338D;
-
-
 }
-
 
 
 
@@ -1557,14 +1813,71 @@ right:35px;
 
 
 
-@media(max-width:600px){
+/* =====================================================
+   TABLET
+===================================================== */
+
+
+@media(max-width:900px){
 
 
 .gallery{
 
-grid-template-columns:1fr;
+grid-template-columns:
+
+repeat(2,1fr);
 
 }
+
+
+.lightbox{
+
+padding:20px;
+
+}
+
+
+#lightbox-img{
+
+max-width:90vw;
+
+max-height:80vh;
+
+}
+
+
+}
+
+
+
+
+/* =====================================================
+   CELULAR
+===================================================== */
+
+
+@media(max-width:600px){
+
+
+
+.article-content{
+
+font-size:1rem;
+
+line-height:1.7;
+
+}
+
+
+
+.gallery{
+
+grid-template-columns:
+
+1fr;
+
+}
+
 
 
 .gallery-card img{
@@ -1573,20 +1886,31 @@ height:260px;
 
 }
 
+.gallery-card{
 
-
-
-#lightbox-img{
-
-
-max-width:94vw;
-
-max-height:78vh;
-
+animation: cardAppear .4s ease;
 
 }
 
 
+@keyframes cardAppear{
+
+from{
+
+transform:scale(.96);
+
+}
+
+
+to{
+
+transform:scale(1);
+
+}
+
+}
+
+/* botones */
 
 
 .lightbox-close{
@@ -1604,9 +1928,7 @@ right:12px;
 
 font-size:28px;
 
-
 }
-
 
 
 
@@ -1623,9 +1945,7 @@ font-size:34px;
 
 border-width:2px;
 
-
 }
-
 
 
 
@@ -1645,37 +1965,69 @@ right:10px;
 
 
 
+/* imagen */
+
+
+#lightbox-img{
+
+
+max-width:92vw;
+
+max-height:78vh;
+
+
+border-radius:14px;
+
 }
 
-@keyframes galleryShow{
 
 
-from{
+}
 
-opacity:0;
+
+
+
+/* =====================================================
+   REDUCE MOTION (ACCESIBILIDAD)
+===================================================== */
+
+
+@media(prefers-reduced-motion:reduce){
+
+
+*{
+
+animation:none!important;
+
+transition:none!important;
+
+}
+
+
+}
+
+#load-more-gallery{
+
+cursor:pointer;
+
+}
+
+
+#load-more-gallery:hover{
 
 transform:
+translateY(-3px);
 
-translateY(20px);
+box-shadow:
 
-}
-
-
-
-to{
-
-opacity:1;
-
-transform:
-
-translateY(0);
+0 15px 35px rgba(0,51,141,.25);
 
 }
 
-
-}
 
 </style>
+
+
 
 
 </Layout>

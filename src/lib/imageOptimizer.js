@@ -173,3 +173,18 @@ image,
 
 
 }
+
+export function createThumbnail(url){
+
+if(!url){
+return "";
+}
+
+
+return optimizeBloggerImage(
+url,
+400
+);
+
+
+}
