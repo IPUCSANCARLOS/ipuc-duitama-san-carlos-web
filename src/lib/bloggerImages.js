@@ -1,45 +1,65 @@
 /*
 =========================================
- EXTRACTOR SEGURO BLOGGER
+ EXTRACTOR + OPTIMIZADOR BLOGGER
+ IPUC SAN CARLOS
 =========================================
 */
 
 
-function cleanUrl(url){
+function cleanUrl(
+url,
+size=900
+){
 
 if(!url){
+
 return null;
+
 }
 
 
 url=url.trim();
 
 
-// eliminar parámetros basura
+// quitar parámetros basura
 
 url=url.split("?")[0];
 
 
-// formatos antiguos
+
+// Blogger formato:
+
+// /s16000/
+// /s400/
+// /s0/
 
 url=url.replace(
 /\/s\d+(-c)?\//,
-"/s1600/"
+`/s${size}/`
 );
 
 
-// formatos nuevos
+
+// Blogger formato:
+
+// =s16000
 
 url=url.replace(
 /=s\d+(-c)?/,
-"=s1600"
+`=s${size}`
 );
 
+
+
+// Blogger formato:
+
+// =w1200-h800
 
 url=url.replace(
 /=w\d+-h\d+/,
-"=s1600"
+`=s${size}`
 );
+
 
 
 return url;
@@ -50,7 +70,17 @@ return url;
 
 
 
-export function extractBloggerImages(html){
+/*
+=========================================
+ EXTRAER IMÁGENES BLOGGER
+=========================================
+*/
+
+
+export function extractBloggerImages(
+html,
+size=900
+){
 
 
 if(!html){
@@ -60,16 +90,15 @@ return [];
 }
 
 
+
 const images=[];
 
 
 
-/*
-buscar solamente src de imágenes
-*/
-
 const regex =
+
 /<img[^>]+src=["']([^"']+)["']/gi;
+
 
 
 
@@ -78,14 +107,23 @@ const match of html.matchAll(regex)
 ){
 
 
-let url =
-cleanUrl(match[1]);
+
+const url =
+cleanUrl(
+match[1],
+size
+);
+
 
 
 
 if(!url){
+
 continue;
+
 }
+
+
 
 
 
@@ -101,9 +139,7 @@ url.includes(
 "bp.blogspot.com"
 )
 
-)
-
-{
+){
 
 
 images.push(url);
@@ -118,13 +154,226 @@ images.push(url);
 
 
 
-/*
-Eliminar repetidas
-*/
 
 return [
+
 ...new Set(images)
+
 ];
+
+
+}
+
+
+
+
+
+
+
+/*
+=========================================
+ PORTADA
+=========================================
+*/
+
+
+export function optimizeCoverImage(
+url
+){
+
+return cleanUrl(
+url,
+1200
+);
+
+}
+
+
+
+
+
+
+
+/*
+=========================================
+ GALERIA
+=========================================
+*/
+
+
+export function optimizeGalleryImages(
+images=[]
+){
+
+
+if(
+!Array.isArray(images)
+){
+
+return [];
+
+}
+
+
+
+return images.map(
+img=>
+cleanUrl(
+img,
+900
+)
+
+).filter(Boolean);
+
+
+
+}
+
+
+
+
+
+
+
+/*
+=========================================
+ VALIDACIÓN CACHE
+=========================================
+*/
+
+
+const imageCache =
+new Map();
+
+
+
+
+
+export async function validateImages(
+images
+){
+
+
+if(
+!Array.isArray(images)
+){
+
+return [];
+
+}
+
+
+
+
+const valid=[];
+
+
+
+
+for(
+const img of images
+){
+
+
+
+if(
+await validateSingleImage(img)
+){
+
+valid.push(img);
+
+}
+
+
+}
+
+
+
+return valid;
+
+
+}
+
+
+
+
+
+async function validateSingleImage(
+url
+){
+
+
+if(
+imageCache.has(url)
+){
+
+return imageCache.get(url);
+
+}
+
+
+
+try{
+
+
+const response =
+await fetch(
+url,
+{
+method:"GET",
+headers:{
+Range:"bytes=0-1024"
+}
+}
+);
+
+
+
+const type =
+response.headers.get(
+"content-type"
+);
+
+
+
+const ok =
+response.ok
+&&
+type
+&&
+type.startsWith(
+"image/"
+);
+
+
+
+
+imageCache.set(
+url,
+ok
+);
+
+
+
+return ok;
+
+
+
+}
+
+catch{
+
+
+imageCache.set(
+url,
+false
+);
+
+
+return false;
+
+
+}
 
 
 }
