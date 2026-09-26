@@ -1,0 +1,2092 @@
+---
+import DiscipuladoLayout from "../../../layouts/DiscipuladoLayout.astro";
+
+const base = import.meta.env.BASE_URL;
+---
+
+<script>
+
+import {
+auth,
+db
+} from "../../../lib/firebase.js";
+
+
+import {
+onAuthStateChanged
+} from "firebase/auth";
+
+
+import {
+collection,
+getDocs,
+doc,
+getDoc,
+updateDoc,
+setDoc,
+serverTimestamp
+} from "firebase/firestore";
+
+
+
+// =====================================
+// VALIDAR ADMINISTRADOR
+// =====================================
+
+
+const validarAdministrador = ()=>{
+
+
+onAuthStateChanged(
+
+auth,
+
+async(usuario)=>{
+
+
+try{
+
+
+if(!usuario){
+
+
+window.location.href =
+base + "discipulado/";
+
+return;
+
+
+}
+
+
+
+const usuarioRef =
+doc(
+db,
+"usuarios",
+usuario.uid
+);
+
+
+
+const usuarioDoc =
+await getDoc(
+usuarioRef
+);
+
+
+
+if(!usuarioDoc.exists()){
+
+
+window.location.href =
+base + "discipulado/";
+
+return;
+
+
+}
+
+
+
+const datos =
+usuarioDoc.data();
+
+
+
+if(
+
+datos.estado !== "activo"
+
+||
+
+datos.rol !== "administrador"
+
+){
+
+window.location.href =
+base + "discipulado/";
+
+return;
+
+}
+
+
+
+setTimeout(()=>{
+
+cargarDatos();
+
+},300);
+
+
+
+}
+
+
+catch(error){
+
+
+console.error(
+"Error validando administrador:",
+error
+);
+
+
+window.location.href =
+base + "discipulado/";
+
+
+}
+
+
+
+}
+
+
+);
+
+
+
+};
+
+
+
+
+// =====================================
+// CARGAR DATOS
+// =====================================
+
+
+const cargarDatos = async()=>{
+
+
+try{
+
+
+// ==========================
+// SOLICITUDES
+// ==========================
+
+
+
+const solicitudesSnapshot =
+await getDocs(
+
+collection(
+db,
+"solicitudes_acceso"
+)
+
+);
+
+
+
+const contenedorSolicitudes =
+document.getElementById(
+"solicitudes"
+);
+
+
+
+
+if(contenedorSolicitudes){
+
+
+
+contenedorSolicitudes.innerHTML="";
+
+
+
+let cantidad = 0;
+
+const rolesPermitidos =
+await obtenerRolesPermitidos();
+
+
+solicitudesSnapshot.forEach((item)=>{
+
+
+
+const data =
+item.data();
+
+
+
+if(
+data.estado === "pendiente"
+){
+
+
+cantidad++;
+
+
+
+contenedorSolicitudes.innerHTML += `
+
+
+<div
+
+class="
+border
+rounded-xl
+p-5
+mb-4
+flex
+justify-between
+items-center
+"
+
+>
+
+<div class="flex items-center gap-4">
+
+
+<img
+
+src="${data.foto || 'https://via.placeholder.com/60'}"
+
+class="
+w-14
+h-14
+rounded-full
+object-cover
+"
+
+>
+
+
+<div>
+
+
+<h3
+
+class="
+font-bold
+text-[#00338D]
+"
+
+>
+
+${data.nombre ?? "Sin nombre"}
+
+</h3>
+
+
+<p
+
+class="
+text-sm
+text-gray-500
+"
+
+>
+
+${data.correo ?? "Sin correo"}
+
+</p>
+
+
+<p
+
+class="
+text-xs
+text-gray-400
+"
+
+>
+
+Estado:
+${data.estado}
+
+</p>
+<p class="text-xs text-gray-400">
+
+Última conexión:
+
+${
+data.ultimaConexion
+?
+data.ultimaConexion.toDate().toLocaleString()
+:
+"Nunca"
+}
+
+</p>
+
+</div>
+
+
+
+<div
+
+class="
+flex
+gap-3
+items-center
+"
+
+>
+
+
+
+<select
+
+id="rolSolicitud-${item.id}"
+
+class="
+border
+rounded-lg
+px-3
+py-2
+"
+
+>
+
+${
+rolesPermitidos.map(rol=>`
+
+<option value="${rol.valor}">
+${rol.nombre}
+</option>
+
+`).join("")
+}
+
+</select>
+
+
+
+
+<button
+
+onclick="aprobarUsuario('${item.id}')"
+
+class="
+bg-[#00338D]
+text-white
+px-5
+py-2
+rounded-full
+"
+
+>
+
+Aprobar
+
+</button>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+`;
+
+
+}
+
+
+});
+
+
+
+
+if(cantidad===0){
+
+
+contenedorSolicitudes.innerHTML = `
+
+
+<p
+
+class="
+text-center
+text-gray-500
+py-5
+"
+
+>
+
+No hay solicitudes pendientes
+
+</p>
+
+
+`;
+
+
+}
+
+
+}
+
+
+
+// ==========================
+// USUARIOS REGISTRADOS
+// ==========================
+
+
+
+const usuariosSnapshot =
+await getDocs(
+
+collection(
+db,
+"usuarios"
+)
+
+);
+
+
+
+const contenedorUsuarios =
+document.getElementById(
+"usuarios"
+);
+
+
+
+if(contenedorUsuarios){
+
+
+contenedorUsuarios.innerHTML="";
+
+
+
+usuariosSnapshot.forEach((item)=>{
+
+
+const data =
+item.data();
+
+
+
+let ultimaConexion =
+"Nunca";
+
+
+if(data.ultimaConexion){
+
+try{
+
+ultimaConexion =
+data.ultimaConexion
+.toDate()
+.toLocaleString();
+
+}
+catch{
+
+ultimaConexion =
+"Disponible";
+
+}
+
+}
+
+
+
+contenedorUsuarios.innerHTML += `
+
+
+<div
+
+class="
+border
+rounded-xl
+p-5
+mb-4
+flex
+justify-between
+items-center
+"
+
+>
+
+
+<div class="flex items-center gap-4">
+
+
+${
+data.foto
+?
+`
+<img
+
+src="${data.foto}"
+
+class="
+w-14
+h-14
+rounded-full
+object-cover
+border
+"
+
+alt="Usuario"
+
+>
+`
+:
+`
+<div
+
+class="
+w-14
+h-14
+rounded-full
+border
+flex
+items-center
+justify-center
+bg-blue-50
+text-[#00338D]
+font-bold
+"
+
+>
+
+${
+
+(data.nombre || "U")
+.substring(0,1)
+.toUpperCase()
+
+}
+
+</div>
+`
+}
+
+
+
+<div>
+
+
+<h3
+
+class="
+font-bold
+text-[#00338D]
+"
+
+>
+
+${data.nombre ?? "Sin nombre"}
+
+</h3>
+
+
+
+<p
+
+class="
+text-sm
+text-gray-500
+"
+
+>
+
+${data.correo ?? "Sin correo"}
+
+</p>
+
+
+
+<p
+
+class="text-sm"
+
+>
+
+Ministerio:
+
+<b>
+
+${data.ministerio ?? "Pendiente"}
+
+</b>
+
+</p>
+
+
+
+<p
+
+class="text-sm"
+
+>
+
+Rol:
+
+<b>
+
+${data.rol ?? "Sin asignar"}
+
+</b>
+
+</p>
+
+
+
+<p
+
+class="text-xs text-gray-400"
+
+>
+
+Estado:
+
+${data.estado ?? "Sin estado"}
+
+</p>
+
+
+
+<p
+
+class="text-xs text-gray-400"
+
+>
+
+Última conexión:
+
+${ultimaConexion}
+
+</p>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+<div>
+
+
+<button
+
+onclick="abrirGestion('${item.id}')"
+
+class="
+border
+border-[#00338D]
+text-[#00338D]
+px-4
+py-2
+rounded-full
+"
+
+>
+
+Gestionar
+
+</button>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+`;
+
+
+
+});
+
+
+
+}
+
+
+
+}
+
+
+catch(error){
+
+
+console.error(
+"Error cargando usuarios:",
+error
+);
+
+
+
+alert(
+"No fue posible cargar la información"
+);
+
+
+
+}
+
+
+};
+
+// =====================================
+// CONTROL CENTRAL DE PERMISOS
+// =====================================
+
+
+const ADMIN_PRINCIPAL =
+"4dQ5I7ixUXUYLlokdj14oJdw1ef1";
+
+
+
+const obtenerPermisosUsuario =
+(usuario)=>{
+
+
+if(!usuario){
+
+return {
+
+principal:false,
+administrar:false,
+pastoral:false,
+ministerial:false,
+consulta:false
+
+};
+
+}
+
+
+
+const esPrincipal =
+usuario.uid === ADMIN_PRINCIPAL;
+
+
+const esAdministrador =
+usuario.rol === "administrador";
+
+
+const esPastor =
+usuario.rol === "pastor";
+
+
+const esLider =
+usuario.rol === "lider";
+
+
+const esAuxiliar =
+usuario.rol === "auxiliar";
+
+
+return {
+
+
+principal:
+esPrincipal,
+
+
+
+administrar:
+
+esPrincipal
+||
+(
+esAdministrador
+&&
+usuario.tipoCuenta === "administrador"
+),
+
+
+
+pastoral:
+
+esPrincipal
+||
+esPastor,
+
+
+
+ministerial:
+
+esPastor
+||
+esLider,
+
+
+
+consulta:
+
+esPrincipal
+||
+esPastor
+||
+esAdministrador
+||
+esAuxiliar
+
+
+};
+
+
+
+};
+
+
+// =====================================
+// APROBAR USUARIO
+// =====================================
+
+const obtenerNivelAcceso = (rol)=>{
+
+
+switch(rol){
+
+
+case "administrador":
+
+return "gestion";
+
+
+case "pastor":
+
+return "supervision_pastoral";
+
+
+case "auxiliar":
+
+return "consulta_general";
+
+
+case "lider":
+
+return "gestion_ministerial";
+
+
+default:
+
+return "sin_asignar";
+
+
+}
+
+
+};
+
+// =====================================
+// ROLES PERMITIDOS SEGÚN USUARIO ACTUAL
+// =====================================
+
+const obtenerRolesPermitidos = async()=>{
+
+
+const usuarioActual = auth.currentUser;
+
+
+if(!usuarioActual){
+
+return [];
+
+}
+
+
+
+const usuarioRef =
+doc(
+db,
+"usuarios",
+usuarioActual.uid
+);
+
+
+
+const usuarioDoc =
+await getDoc(
+usuarioRef
+);
+
+
+
+if(!usuarioDoc.exists()){
+
+return [];
+
+}
+
+
+
+const usuario =
+usuarioDoc.data();
+
+
+
+const esPrincipal =
+usuarioActual.uid ===
+"4dQ5I7ixUXUYLlokdj14oJdw1ef1";
+
+
+
+
+// =====================================
+// ADMINISTRADOR PRINCIPAL
+// =====================================
+
+if(esPrincipal){
+
+return [
+
+{
+valor:"administrador",
+nombre:"Administrador"
+},
+
+{
+valor:"pastor",
+nombre:"Pastor"
+},
+
+{
+valor:"lider",
+nombre:"Líder"
+},
+
+{
+valor:"auxiliar",
+nombre:"Auxiliar"
+}
+
+];
+
+}
+
+
+
+
+// =====================================
+// PASTOR
+// =====================================
+
+if(usuario.rol === "pastor"){
+
+return [
+
+{
+valor:"pastor",
+nombre:"Pastor"
+},
+
+{
+valor:"lider",
+nombre:"Líder"
+},
+
+{
+valor:"auxiliar",
+nombre:"Auxiliar"
+}
+
+];
+
+}
+
+
+
+
+// =====================================
+// ADMINISTRADOR SECUNDARIO
+// =====================================
+
+if(
+usuario.rol === "administrador"
+&&
+usuario.tipoCuenta === "administrador"
+){
+
+return [
+
+{
+valor:"lider",
+nombre:"Líder"
+},
+
+{
+valor:"auxiliar",
+nombre:"Auxiliar"
+}
+
+];
+
+}
+
+
+
+
+return [];
+
+
+};
+
+
+// =====================================
+// ABRIR GESTION USUARIO
+// =====================================
+
+
+window.abrirGestion =
+async(uid)=>{
+
+
+try{
+
+
+const usuarioRef =
+doc(
+db,
+"usuarios",
+uid
+);
+
+
+
+const usuarioDoc =
+await getDoc(
+usuarioRef
+);
+
+
+
+if(!usuarioDoc.exists()){
+
+
+alert(
+"Usuario no encontrado"
+);
+
+
+return;
+
+
+}
+
+
+
+const datos =
+usuarioDoc.data();
+
+
+
+const modal =
+document.getElementById(
+"modalUsuario"
+);
+
+
+
+if(modal){
+
+modal.classList.remove(
+"hidden"
+);
+
+}
+
+
+
+document.getElementById(
+"usuarioUid"
+)
+.value =
+uid;
+
+
+
+document.getElementById(
+"nombreUsuario"
+)
+.textContent =
+datos.nombre ?? "Sin nombre";
+
+
+
+document.getElementById(
+"correoUsuario"
+)
+.textContent =
+datos.correo ?? "Sin correo";
+
+
+
+document.getElementById(
+"ministerioUsuario"
+)
+.value =
+datos.ministerio ?? "Pendiente";
+
+
+
+document.getElementById(
+"rolUsuario"
+)
+.value =
+datos.rol ?? "lider";
+
+
+
+document.getElementById(
+"nivelAccesoUsuario"
+)
+.value =
+datos.nivelAcceso ?? "apoyo";
+
+
+document.getElementById(
+"estadoUsuario"
+)
+.value =
+datos.estado ?? "activo";
+
+
+
+}
+
+catch(error){
+
+
+console.error(
+"Error abriendo usuario:",
+error
+);
+
+
+alert(
+"Error: " + error.message
+);
+
+
+
+}
+
+
+};
+
+
+
+
+// =====================================
+// GUARDAR CAMBIOS USUARIO
+// =====================================
+
+
+
+window.guardarCambios =
+async()=>{
+
+
+const uid =
+document
+.getElementById(
+"usuarioUid"
+)
+.value;
+
+
+
+const ministerio =
+document
+.getElementById(
+"ministerioUsuario"
+)
+.value;
+
+
+
+const rolNuevo =
+document
+.getElementById(
+"rolUsuario"
+)
+.value;
+
+
+
+const estado =
+document
+.getElementById(
+"estadoUsuario"
+)
+.value;
+
+
+
+if(!uid){
+
+alert(
+"Usuario no seleccionado"
+);
+
+return;
+
+}
+
+
+
+try{
+
+
+// =====================================
+// OBTENER INFORMACIÓN ACTUAL
+// =====================================
+
+
+const usuarioRef =
+doc(
+db,
+"usuarios",
+uid
+);
+
+
+const usuarioActual =
+await getDoc(
+usuarioRef
+);
+
+
+
+if(!usuarioActual.exists()){
+
+
+alert(
+"El usuario no existe"
+);
+
+
+return;
+
+
+}
+
+
+
+const datosActuales =
+usuarioActual.data();
+
+
+
+// =====================================
+// IDENTIFICAR ADMINISTRADOR PRINCIPAL
+// =====================================
+
+
+const administradorActualRef =
+doc(
+db,
+"usuarios",
+auth.currentUser.uid
+);
+
+
+const administradorActual =
+await getDoc(
+administradorActualRef
+);
+
+
+
+if(!administradorActual.exists()){
+
+
+alert(
+"No se encontró información del administrador actual."
+);
+
+
+return;
+
+
+}
+
+
+
+const datosAdministradorActual =
+administradorActual.data();
+
+
+
+const esPrincipal =
+auth.currentUser.uid === ADMIN_PRINCIPAL;
+
+
+
+// =====================================
+// RESTRICCIONES DE JERARQUÍA
+// =====================================
+
+
+
+if(
+!esPrincipal
+){
+
+
+if(
+rolNuevo === "administrador"
+&&
+datosActuales.rol !== "administrador"
+){
+
+
+alert(
+"Solo el administrador principal puede asignar administradores."
+);
+
+
+return;
+
+
+}
+
+
+
+if(
+rolNuevo === "pastor"
+&&
+datosActuales.rol !== "pastor"
+){
+
+
+alert(
+"Solo el administrador principal puede asignar el rol pastor."
+);
+
+
+return;
+
+
+}
+
+
+
+}
+
+
+
+
+// =====================================
+// CONSERVAR TIPO DE CUENTA
+// =====================================
+
+
+let tipoCuenta =
+datosActuales.tipoCuenta
+||
+"usuario";
+
+
+
+// Si el usuario pasa a administrador
+
+if(
+rolNuevo === "administrador"
+&&
+tipoCuenta === "usuario"
+){
+
+
+tipoCuenta =
+"administrador";
+
+
+}
+
+
+
+// Si es pastor
+
+if(
+rolNuevo === "pastor"
+){
+
+
+tipoCuenta =
+"pastor";
+
+
+}
+
+
+
+// Si deja de ser administrador
+
+if(
+rolNuevo !== "administrador"
+&&
+tipoCuenta === "administrador"
+){
+
+
+tipoCuenta =
+"usuario";
+
+
+}
+
+
+
+// =====================================
+// NIVEL DE ACCESO
+// =====================================
+
+
+const nivelAcceso =
+obtenerNivelAcceso(
+rolNuevo
+);
+
+
+
+
+// =====================================
+// ACTUALIZAR
+// =====================================
+
+
+await updateDoc(
+
+usuarioRef,
+
+{
+
+
+ministerio:
+ministerio,
+
+
+rol:
+rolNuevo,
+
+
+estado:
+estado,
+
+
+nivelAcceso:
+nivelAcceso,
+
+
+tipoCuenta:
+tipoCuenta,
+
+
+fechaActualizacion:
+serverTimestamp(),
+
+
+actualizadoPor:
+auth.currentUser.uid
+
+
+}
+
+);
+
+
+
+alert(
+"Usuario actualizado correctamente"
+);
+
+
+
+location.reload();
+
+
+
+}
+
+
+catch(error){
+
+
+console.error(
+"Error actualizando usuario:",
+error
+);
+
+
+
+alert(
+"No fue posible actualizar el usuario"
+);
+
+
+
+}
+
+
+
+};
+
+
+
+
+// =====================================
+// CERRAR MODAL
+// =====================================
+
+
+
+window.cerrarModal =
+()=>{
+
+
+const modal =
+document.getElementById(
+"modalUsuario"
+);
+
+
+
+if(modal){
+
+
+modal.classList.add(
+"hidden"
+);
+
+
+}
+
+
+};
+
+
+
+
+// =====================================
+// INICIAR SEGURIDAD
+// =====================================
+
+
+validarAdministrador();
+
+
+</script>
+<DiscipuladoLayout
+
+title="Administración de usuarios"
+
+description="Gestión de accesos y permisos"
+
+>
+
+
+<section
+
+class="
+min-h-screen
+bg-gradient-to-br
+from-blue-50
+via-white
+to-yellow-50
+p-8
+"
+
+>
+
+
+<div
+
+class="
+max-w-5xl
+mx-auto
+bg-white
+rounded-3xl
+shadow-xl
+p-8
+"
+
+>
+
+
+<h1
+
+class="
+text-3xl
+font-bold
+text-[#00338D]
+mb-2
+"
+
+>
+
+Administración de usuarios
+
+</h1>
+
+
+<p
+
+class="
+text-gray-500
+mb-10
+"
+
+>
+
+Gestión de accesos, roles y permisos del sistema.
+
+</p>
+
+
+
+<h2
+
+class="
+text-xl
+font-bold
+text-[#00338D]
+mb-5
+"
+
+>
+
+Solicitudes pendientes
+
+</h2>
+
+
+
+<div
+
+id="solicitudes"
+
+>
+
+Cargando...
+
+</div>
+
+
+
+
+<hr class="my-10">
+
+
+
+<h2
+
+class="
+text-xl
+font-bold
+text-[#00338D]
+mb-5
+"
+
+>
+
+Usuarios registrados
+
+</h2>
+
+
+
+
+<div
+
+id="usuarios"
+
+>
+
+Cargando...
+
+</div>
+
+
+
+</div>
+
+
+
+<!-- MODAL GESTION -->
+
+<div
+
+id="modalUsuario"
+
+class="
+hidden
+fixed
+inset-0
+bg-black/40
+flex
+items-center
+justify-center
+p-5
+z-50
+"
+
+>
+
+
+<div
+
+class="
+bg-white
+rounded-3xl
+p-5
+sm:p-8
+w-full
+max-w-md
+max-h-[90vh]
+overflow-y-auto
+"
+
+>
+
+
+<h2
+
+class="
+text-xl
+font-bold
+text-[#00338D]
+mb-5
+"
+
+>
+
+Gestionar usuario
+
+</h2>
+
+
+
+
+<p
+
+id="nombreUsuario"
+
+class="
+font-semibold
+"
+
+>
+
+</p>
+
+
+
+
+<p
+
+id="correoUsuario"
+
+class="
+text-sm
+text-gray-500
+mb-5
+"
+
+>
+
+</p>
+
+
+
+<input
+
+id="usuarioUid"
+
+type="hidden"
+
+/>
+
+<label>
+
+Ministerio
+
+</label>
+
+
+<select
+
+id="ministerioUsuario"
+
+class="
+w-full
+border
+rounded-lg
+p-3
+mb-4
+"
+
+>
+
+
+<option value="Administración">
+Administración
+</option>
+
+
+<option value="Evangelismo">
+Evangelismo
+</option>
+
+
+<option value="REFAM">
+REFAM
+</option>
+
+
+<option value="Misiones">
+Misiones
+</option>
+
+
+<option value="Oración">
+Oración
+</option>
+
+
+<option value="UJIERES Y BIS">
+UJIERES Y BIS
+</option>
+
+
+<option value="Damas Dorcas">
+Damas Dorcas
+</option>
+
+
+<option value="Escuela Dominical">
+Escuela Dominical
+</option>
+
+
+<option value="Comité Familia">
+Comité Familia
+</option>
+
+
+<option value="Obra Social">
+Obra Social
+</option>
+
+
+<option value="Jóvenes">
+Jóvenes
+</option>
+
+
+<option value="Alabanza">
+Alabanza
+</option>
+
+
+<option value="DECOM">
+DECOM
+</option>
+
+
+</select>
+
+<label class="block mt-4">
+
+Rol
+
+</label>
+
+
+<select
+
+id="rolUsuario"
+
+class="
+w-full
+border
+rounded-lg
+p-3
+mb-4
+"
+
+>
+
+<option value="lider">
+Líder
+</option>
+
+<option value="pastor">
+Pastor
+</option>
+
+<option value="administrador">
+Administrador
+</option>
+
+<option value="auxiliar">
+Auxiliar
+</option>
+
+</select>
+
+
+
+
+<label>
+
+Nivel de acceso
+
+</label>
+
+
+<select
+
+id="nivelAccesoUsuario"
+
+class="
+w-full
+border
+rounded-lg
+p-3
+mb-4
+"
+
+>
+
+
+<option value="principal">
+Principal
+</option>
+
+
+<option value="gestion_ministerial">
+Gestión ministerial
+</option>
+
+
+<option value="supervision_pastoral">
+Supervisión pastoral
+</option>
+
+
+<option value="ministerial">
+Ministerial
+</option>
+
+
+<option value="consulta_general">
+Consulta general
+</option>
+
+<option value="gestion">
+Gestión
+</option>
+
+
+</select>
+
+
+
+
+
+<label>
+
+Estado
+
+</label>
+
+
+<select
+
+id="estadoUsuario"
+
+class="
+w-full
+border
+rounded-lg
+p-3
+mb-5
+"
+
+>
+
+
+<option value="activo">
+Activo
+</option>
+
+
+<option value="inactivo">
+Inactivo
+</option>
+
+
+</select>
+
+
+
+
+<button
+
+onclick="guardarCambios()"
+
+class="
+w-full
+bg-[#00338D]
+text-white
+py-3
+rounded-full
+mb-3
+"
+
+>
+
+Guardar cambios
+
+</button>
+
+
+
+
+<button
+
+onclick="cerrarModal()"
+
+class="
+w-full
+border
+py-3
+rounded-full
+"
+
+>
+
+Cancelar
+
+</button>
+
+
+
+</div>
+
+
+</div>
+
+
+
+</section>
+
+
+</DiscipuladoLayout>

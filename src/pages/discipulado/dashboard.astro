@@ -1,0 +1,590 @@
+---
+import DiscipuladoLayout from "../../layouts/DiscipuladoLayout.astro";
+
+const base = import.meta.env.BASE_URL;
+---
+
+
+<DiscipuladoLayout
+title="Panel de Discipulado"
+description="Panel interno IPUC San Carlos"
+>
+
+
+<!-- PANTALLA DE SEGURIDAD -->
+
+<div
+id="bloqueo"
+class="
+min-h-screen
+flex
+items-center
+justify-center
+bg-gradient-to-br
+from-blue-50
+via-white
+to-yellow-50
+"
+>
+
+
+<div
+class="
+bg-white
+rounded-2xl
+shadow-lg
+p-8
+text-center
+"
+>
+
+
+<h2
+class="
+text-xl
+font-bold
+text-[#00338D]
+"
+>
+
+Verificando acceso...
+
+</h2>
+
+
+<p
+class="
+text-gray-500
+mt-3
+"
+>
+
+Validando permisos del usuario
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- CONTENIDO REAL DEL DASHBOARD -->
+
+<div
+id="contenido"
+style="display:none"
+>
+
+
+
+<section
+class="
+min-h-screen
+bg-gradient-to-br
+from-blue-50
+via-white
+to-yellow-50
+p-8
+"
+>
+
+
+<div
+class="
+max-w-5xl
+mx-auto
+"
+>
+
+
+<div
+class="
+bg-white
+rounded-2xl
+shadow-lg
+p-8
+"
+>
+
+
+<h1
+class="
+text-3xl
+font-bold
+text-[#00338D]
+mb-4
+"
+>
+
+Panel de Discipulado
+
+</h1>
+
+
+
+<p
+class="
+text-gray-600
+mb-8
+"
+>
+
+Bienvenido al sistema interno de seguimiento pastoral.
+
+</p>
+
+
+
+
+<div
+id="panelOpciones"
+class="
+grid
+md:grid-cols-3
+gap-5
+"
+>
+
+
+
+<div
+class="
+bg-blue-50
+rounded-xl
+p-5
+"
+>
+
+<h2
+class="
+font-bold
+text-[#00338D]
+"
+>
+
+Discípulos
+
+</h2>
+
+
+<p
+class="
+text-sm
+text-gray-500
+mt-2
+"
+>
+
+Gestión de personas en formación.
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+<div
+class="
+bg-yellow-50
+rounded-xl
+p-5
+"
+>
+
+
+<h2
+class="
+font-bold
+text-[#00338D]
+"
+>
+
+Seguimiento
+
+</h2>
+
+
+<p
+class="
+text-sm
+text-gray-500
+mt-2
+"
+>
+
+Visitas y avances espirituales.
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+<div
+class="
+bg-green-50
+rounded-xl
+p-5
+"
+>
+
+
+<h2
+class="
+font-bold
+text-[#00338D]
+"
+>
+
+Reportes
+
+</h2>
+
+
+<p
+class="
+text-sm
+text-gray-500
+mt-2
+"
+>
+
+Información del ministerio.
+
+</p>
+
+
+</div>
+
+<!-- SOLO ADMINISTRADOR -->
+
+<div
+id="administracion"
+class="
+hidden
+bg-purple-50
+rounded-xl
+p-5
+border
+border-purple-100
+cursor-pointer
+"
+onclick="
+window.location.href='/ipuc-duitama-san-carlos-web/discipulado/admin/usuarios'
+"
+>
+
+<h2 class="font-bold text-purple-700">
+⚙️ Administración
+</h2>
+
+<p class="text-sm text-gray-500 mt-2">
+Gestionar usuarios y permisos.
+</p>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+</div>
+
+
+
+
+
+
+
+<script>
+
+
+import {
+auth,
+db
+} from "../../lib/firebase.js";
+
+
+import {
+onAuthStateChanged
+} from "firebase/auth";
+
+
+import {
+doc,
+getDoc
+} from "firebase/firestore";
+
+
+
+const base =
+import.meta.env.BASE_URL;
+
+
+
+const bloqueo =
+document.getElementById("bloqueo");
+
+
+const contenido =
+document.getElementById("contenido");
+
+
+
+
+
+onAuthStateChanged(
+
+auth,
+
+async(usuario)=>{
+
+
+try{
+
+
+
+// 1. No existe sesión
+
+if(!usuario){
+
+
+window.location.href =
+base + "discipulado/";
+
+
+return;
+
+}
+
+
+
+
+
+// 2. Buscar usuario Firestore
+
+
+const referencia =
+doc(
+
+db,
+
+"usuarios",
+
+usuario.uid
+
+);
+
+
+
+const documento =
+await getDoc(referencia);
+
+
+
+
+
+if(!documento.exists()){
+
+
+alert(
+"Usuario no registrado"
+);
+
+
+await auth.signOut();
+
+
+
+window.location.href =
+base + "discipulado/";
+
+
+
+return;
+
+
+}
+
+
+
+
+
+
+const datos =
+documento.data();
+
+
+
+
+
+
+
+// 3. Estado del usuario
+
+
+if(datos.estado !== "activo"){
+
+
+alert(
+"Usuario pendiente de autorización"
+);
+
+
+
+await auth.signOut();
+
+
+
+window.location.href =
+base + "discipulado/";
+
+
+
+return;
+
+
+}
+
+
+
+
+
+
+
+// 4. Rol permitido
+
+
+const rolesPermitidos = [
+
+"administrador",
+
+"pastor",
+
+"lider"
+
+];
+
+
+
+if(
+!rolesPermitidos.includes(datos.rol)
+
+){
+
+
+
+alert(
+"Usuario sin permisos"
+);
+
+
+
+await auth.signOut();
+
+
+
+window.location.href =
+base + "discipulado/";
+
+
+
+return;
+
+
+}
+
+
+
+
+
+
+// TODO correcto
+
+
+bloqueo.style.display =
+"none";
+
+
+contenido.style.display =
+"block";
+
+
+
+console.log(
+"Acceso autorizado",
+datos
+);
+
+if(
+datos.rol === "administrador"
+){
+
+document
+.getElementById("administracion")
+.classList
+.remove("hidden");
+
+}
+
+}
+
+catch(error){
+
+
+
+console.error(
+"Error validando acceso:",
+error
+);
+
+
+
+await auth.signOut();
+
+
+
+window.location.href =
+base + "discipulado/";
+
+
+
+}
+
+
+
+}
+
+);
+
+
+
+
+</script>
+
+
+
+</DiscipuladoLayout>

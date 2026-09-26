@@ -1,0 +1,574 @@
+---
+import DiscipuladoLayout from "../../layouts/DiscipuladoLayout.astro";
+
+const base = import.meta.env.BASE_URL;
+---
+
+<DiscipuladoLayout
+title="Ingreso | Sistema de Discipulado"
+description="Acceso privado al sistema de discipulado IPUC San Carlos"
+>
+
+
+<section
+class="
+min-h-screen
+flex
+items-center
+justify-center
+px-5
+py-10
+bg-gradient-to-br
+from-blue-50
+via-white
+to-yellow-50
+"
+>
+
+
+<div
+class="
+bg-white
+rounded-3xl
+shadow-2xl
+p-10
+w-full
+max-w-md
+text-center
+border
+border-blue-100
+"
+>
+
+
+<!-- LOGO -->
+
+<img
+
+src={`${base}images/logo-ipuc-oficial.png`}
+
+alt="IPUC San Carlos"
+
+class="
+mx-auto
+h-28
+mb-5
+object-contain
+"
+
+/>
+
+
+
+<h2
+
+class="
+text-sm
+font-semibold
+text-[#00338D]
+uppercase
+tracking-wide
+"
+
+>
+
+IPUC San Carlos
+
+</h2>
+
+
+
+<h1
+
+class="
+text-3xl
+font-bold
+text-[#00338D]
+mt-2
+mb-3
+"
+
+>
+
+Sistema de Discipulado
+
+</h1>
+
+
+
+<p
+
+class="
+text-gray-500
+text-sm
+leading-relaxed
+mb-8
+"
+
+>
+
+Plataforma interna de seguimiento pastoral,
+formación y acompañamiento espiritual.
+
+</p>
+
+
+
+
+<div
+
+class="
+bg-blue-50
+rounded-xl
+p-4
+mb-8
+text-left
+"
+
+>
+
+
+<p
+
+class="
+text-xs
+font-semibold
+text-[#00338D]
+mb-2
+"
+
+>
+
+Acceso autorizado para:
+
+</p>
+
+
+<ul
+
+class="
+text-sm
+text-gray-600
+space-y-1
+"
+
+>
+
+<li>✓ Pastores</li>
+
+<li>✓ Líderes de ministerio</li>
+
+<li>✓ Administrador</li>
+
+</ul>
+
+
+</div>
+
+
+
+
+
+<button
+
+id="googleLogin"
+
+class="
+w-full
+bg-[#00338D]
+text-white
+py-4
+rounded-full
+font-semibold
+shadow-lg
+hover:bg-blue-900
+transition
+"
+
+>
+
+🔵 Ingresar con Google
+
+</button>
+
+
+
+
+<p
+
+id="mensaje"
+
+class="
+mt-5
+text-sm
+text-gray-500
+"
+
+></p>
+
+
+
+
+<!-- SOPORTE -->
+
+<div
+
+class="
+mt-8
+border-t
+pt-5
+"
+
+>
+
+
+<p
+
+class="
+text-xs
+text-gray-500
+mb-3
+"
+
+>
+
+¿Problemas para ingresar?
+
+</p>
+
+
+
+<a
+
+href={`${base}discipulado/soporte`}
+
+class="
+inline-flex
+items-center
+justify-center
+w-full
+border
+border-[#00338D]
+text-[#00338D]
+py-3
+rounded-full
+text-sm
+font-semibold
+hover:bg-blue-50
+transition
+"
+
+>
+
+💬 Reportar problema de acceso
+
+</a>
+
+
+</div>
+
+
+
+
+<p
+
+class="
+mt-8
+text-xs
+text-gray-400
+"
+
+>
+
+Acceso privado · Sistema protegido
+
+</p>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<script>
+
+import {
+auth,
+googleProvider,
+db
+} from "../../lib/firebase.js";
+
+
+import {
+signInWithPopup
+} from "firebase/auth";
+
+
+import {
+doc,
+setDoc,
+getDoc,
+updateDoc,
+serverTimestamp
+} from "firebase/firestore";
+
+
+
+const boton =
+document.getElementById("googleLogin");
+
+
+const mensaje =
+document.getElementById("mensaje");
+
+
+
+boton?.addEventListener(
+"click",
+async()=>{
+
+
+try{
+
+
+mensaje.textContent =
+"Conectando con Google...";
+
+
+
+const resultado =
+await signInWithPopup(
+auth,
+googleProvider
+);
+
+
+
+const usuario =
+resultado.user;
+
+
+console.log("UID DEL USUARIO:", usuario.uid);
+
+console.log(usuario);
+
+
+
+const usuarioRef =
+doc(
+db,
+"usuarios",
+usuario.uid
+);
+
+
+const solicitudRef =
+doc(
+db,
+"solicitudes_acceso",
+usuario.uid
+);
+
+
+const usuarioActivo =
+await getDoc(usuarioRef);
+
+
+
+/*
+--------------------------------
+USUARIO YA APROBADO
+--------------------------------
+*/
+
+if(usuarioActivo.exists()){
+
+
+
+const datosUsuario =
+usuarioActivo.data();
+
+
+
+if(datosUsuario.estado !== "activo"){
+
+
+mensaje.textContent =
+"Usuario inactivo. Contacte al administrador.";
+
+
+await auth.signOut();
+
+
+return;
+
+
+}
+
+
+
+
+if(
+datosUsuario.rol !== "administrador" &&
+datosUsuario.rol !== "pastor" &&
+datosUsuario.rol !== "lider"
+){
+
+
+mensaje.textContent =
+"Usuario sin permisos asignados.";
+
+
+await auth.signOut();
+
+
+return;
+
+
+}
+
+await updateDoc(
+usuarioRef,
+{
+
+ultimaConexion:
+serverTimestamp(),
+
+fechaActualizacion:
+serverTimestamp()
+
+}
+);
+
+mensaje.textContent =
+`Bienvenido ${usuario.displayName}`;
+
+
+
+setTimeout(()=>{
+
+
+window.location.href =
+"/ipuc-duitama-san-carlos-web/discipulado/dashboard";
+
+
+},1200);
+
+
+
+return;
+
+
+}
+
+
+
+
+
+
+/*
+--------------------------------
+USUARIO NUEVO
+CREAR SOLICITUD
+--------------------------------
+*/
+
+
+
+await setDoc(
+
+solicitudRef,
+
+{
+
+
+uid:
+
+usuario.uid,
+
+
+nombre:
+
+usuario.displayName,
+
+
+correo:
+
+usuario.email,
+
+
+foto:
+
+usuario.photoURL,
+
+
+estado:
+
+"pendiente",
+
+
+fechaSolicitud:
+
+new Date()
+
+
+}
+
+);
+
+
+
+mensaje.textContent =
+
+"Solicitud enviada. Espere aprobación del administrador.";
+
+
+
+await auth.signOut();
+
+
+return;
+
+mensaje.textContent =
+`Bienvenido ${usuario.displayName}`;
+
+
+
+setTimeout(()=>{
+
+window.location.href =
+"/ipuc-duitama-san-carlos-web/discipulado/dashboard";
+
+},1200);
+
+
+
+}
+
+
+catch(error){
+
+
+console.error("ERROR FIREBASE:", error);
+
+
+mensaje.textContent =
+error.code + " - " + error.message;
+
+
+}
+
+
+});
+
+
+</script>
+
+
+
+</DiscipuladoLayout>
